@@ -15,7 +15,7 @@
 	char dominio[10];
 	char biografia[200]*/
 
-void Menu ();
+
 
 Noh::Noh () {
 	mProximo = NULL;
