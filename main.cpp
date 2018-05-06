@@ -13,6 +13,7 @@
 using namespace std;
 
 int main() {
-	cout << "Aqui teste" << endl; 
+	cout << "Aqui teste" << endl;
+	Menu(); 
 	return 0;
 }
