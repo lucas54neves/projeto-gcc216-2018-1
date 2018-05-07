@@ -54,9 +54,11 @@ TabelaH::~TabelaH () {
 
 void Menu() {
 	cout <<"***********************************************" << endl;
-	cout <<"   1 - Inserir novo ---- no arquivo "<< endl;
-	cout <<"   2 -  Remover ---- do arquivo"<< endl;
-	cout <<"   3 - Consultar ----- no arquivo "<< endl;
-	cout <<"   4 - Imprimir todos registros "<< endl;
+	cout << "Entre com a opção desejada:" << endl;
+	cout << "1 para inserir novo ---- no arquivo;" << endl;
+	cout << "2 para remover ---- do arquivo;" << endl;
+	cout << "3 para consultar ----- no arquivo;" << endl;
+	cout << "4 para imprimir todos registros;" << endl;
+	cout << "0 para sair" << endl;
 	cout <<"*************************************************" << endl;
 }
