@@ -1,9 +1,7 @@
 /* 
-  --Trabalho de Hashing Extensível :
-    Estrutura de Dados.
-  --Método de ++++++++++++++ 
-     (aqui vai o nome do seu trabalho)
-  --Copyright 2018 by Lucas, Andrew e Vinicius.  
+  --Trabalho de Estrutura de Dados.
+  --Sistema de Cadastro em Hashing Extensível
+  --Copyright 2018 by Lucas Neves, Andrew e Vinicius.  
   --Arquivo contém as implementações das classes;
 */
 
