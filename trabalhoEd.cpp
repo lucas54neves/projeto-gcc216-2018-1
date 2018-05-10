@@ -6,7 +6,7 @@
 */
 
 #include <iostream>
-#include "workEd.h"
+#include "trabalhoEd.h"
 
 /*int id;
 	char nome[50];
@@ -18,17 +18,17 @@
 Noh::Noh () {
 	mProximo = NULL;
 	mConteudo.id = -1;
-	mConteudo.nome[50] = '';
-	mConteudo.dominio[10] = '';
-	mConteudo.biografia[200] = '';
+	mConteudo.nome[50] = ' ';
+	mConteudo.dominio[10] = ' ';
+	mConteudo.biografia[200] = ' ';
 }
 
 Noh::~Noh () {
 	mProximo = NULL;
 	mConteudo.id = -1;
-	mConteudo.nome[50] = '';
-	mConteudo.dominio[10] = '';
-	mConteudo.biografia[200] = '';
+	mConteudo.nome[50] = ' ';
+	mConteudo.dominio[10] = ' ';
+	mConteudo.biografia[200] = ' ';
 }
 
 TabelaH::TabelaH (unsigned int capsup) : mCapacidade (capsup) {

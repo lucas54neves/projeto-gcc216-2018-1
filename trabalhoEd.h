@@ -7,8 +7,8 @@
   --Arquivo contém as classes;
 */
 
-#ifndef WORKED_H
-#define WORKED_H
+#ifndef TRABALHOED_H
+#define TRABALHOED_H
 
 #include <iostream>
 #define TAM_BLOCO 16

@@ -1,10 +1,10 @@
-all:	workEd.o main.o
-	g++ -o main workEd.o main.o
+all:	trabalhoEd.o main.o
+	g++ -o main trabalhoEd.o main.o
 
-workEd.o:	main.cpp workEd.h
-	g++ -c workEd.cpp
+workEd.o:	main.cpp trabalhoEd.h
+	g++ -c trabalhoEd.cpp
 
-main.o:	main.cpp workEd.h
+main.o:	main.cpp trabalhoEd.h
 	g++ -c main.cpp
 
 clean:

@@ -6,7 +6,7 @@
 */
 
 #include <iostream>
-#include "workEd.h"
+#include "trabalhoEd.h"
 
 using namespace std;
 
