@@ -8,12 +8,17 @@
 #include <iostream>
 #include "trabalhoEd.h"
 
-/*int id;
+/*
+	int id;
 	char nome[50];
 	char dominio[10];
-	char biografia[200]*/
+	char biografia[200]
+*/
+int FuncaoHash (int teste) {
+	int h = teste % TAM_BLOCO;
 
-
+	return h;
+}
 
 Noh::Noh () {
 	mProximo = NULL;

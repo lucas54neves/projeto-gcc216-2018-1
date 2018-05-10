@@ -12,6 +12,9 @@ using namespace std;
 
 int main() {
 	cout << "Sistema de cadastro em Hashing Extensível" << endl;
+	int teste;
+	cin >> teste;
+	cout << FuncaoHash(teste) << endl;
 	unsigned int opcao;
 	do {
 		Menu();
@@ -27,7 +30,7 @@ int main() {
 				// Subprograma para remover um objeto do arquivo
 				break;
 			case 3:
-				// Subprograma para consultado um objeto no arquivo
+				// Subprograma para consultar um objeto no arquivo
 				break;
 			case 4:
 				// Subprograma para imprimir todo o conteúdo do arquivo, na ordem de armazenamento
@@ -40,6 +43,6 @@ int main() {
 				cout << "Opção não cadastrada! Tente novamente." << endl;
 				break;
 		}
-	} while (opcao =! 0);
+	} while (opcao != 0);
 	return 0;
 }

@@ -15,6 +15,8 @@ using namespace std;
 
 void Menu ();
 
+int FuncaoHash (int teste);
+
 struct Deuses {
 	int id;
 	char nome[50];
