@@ -5,6 +5,13 @@
   --Arquivo contém as execuções;
 */
 
+/*
+	int id;
+	char nome[50];
+	char dominio[10];
+	char biografia[200]
+*/
+
 #include <iostream>
 #include "trabalhoEd.h"
 
@@ -12,10 +19,8 @@ using namespace std;
 
 int main() {
 	cout << "Sistema de cadastro em Hashing Extensível" << endl;
-	int teste;
-	cin >> teste;
-	cout << FuncaoHash(teste) << endl;
-	unsigned int opcao;
+	int opcao;
+	TabelaH tabelaCadastro;
 	do {
 		Menu();
 		cin >> opcao;
@@ -25,9 +30,15 @@ int main() {
 				break;
 			case 1:
 				// Subprograma para inserir um novo objeto no arquivo
+				Deuses* deus = new Deuses;
+				deus->id = rand() % 64;
+				cin >> deus->nome >> deus->dominio >> deus->biografia;
+
+				tabelaCadastro.Insere(deus);
 				break;
 			case 2:
 				// Subprograma para remover um objeto do arquivo
+				
 				break;
 			case 3:
 				// Subprograma para consultar um objeto no arquivo

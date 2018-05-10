@@ -15,8 +15,6 @@ using namespace std;
 
 void Menu ();
 
-int FuncaoHash (int teste);
-
 struct Deuses {
 	int id;
 	char nome[50];
@@ -25,6 +23,8 @@ struct Deuses {
 };
 
 typedef Deuses Dado;
+
+int FuncaoHash (Dado deus);
 
 class Noh {
 	friend class TabelaH;
@@ -38,15 +38,15 @@ class Noh {
 
 class TabelaH {
 	public:
-		TabelaH (unsigned int capsup = 100);
+		TabelaH (unsigned int cap = 100);
 		~TabelaH ();
-		void Insere (Dado* all);
-		void Remove (int ident);
+		void Insere (Dado* deus);
+		bool Exite (Dado* deus);
+		void Remove (int id);
 		void Percorre ();
 	protected :
 		Noh** mElementos;
 		unsigned int mCapacidade;
-
 };
 
 #endif

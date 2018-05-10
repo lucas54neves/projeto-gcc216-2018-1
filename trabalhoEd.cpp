@@ -14,8 +14,8 @@
 	char dominio[10];
 	char biografia[200]
 */
-int FuncaoHash (int teste) {
-	int h = teste % TAM_BLOCO;
+int FuncaoHash (Dado deus) {
+	int h = deus.id % TAM_BLOCO;
 
 	return h;
 }
@@ -36,9 +36,9 @@ Noh::~Noh () {
 	mConteudo.biografia[200] = ' ';
 }
 
-TabelaH::TabelaH (unsigned int capsup) : mCapacidade (capsup) {
-	mElementos = new Noh*[capsup];
-	for (int i = 0; i < capsup; ++i) {
+TabelaH::TabelaH (unsigned int cap) : mCapacidade (cap) {
+	mElementos = new Noh*[cap];
+	for (int i = 0; i < cap; ++i) {
 		mElementos[i] = NULL;
 	}
 }
@@ -55,12 +55,69 @@ TabelaH::~TabelaH () {
 	delete[] mElementos;
 }
 
+void TabelaH::Insere (Dado* deus) {
+	int h;
+	h = FuncaoHash(deus);
+
+	if (Existe(deus)) {
+		// Colidiu
+	}
+
+/*
+void tabelaHash::insere(string c, string v) {
+	int h;
+	h = funcaoHash(c, capacidade);
+	if (recupera(c) == "NÃO ENCONTRADO!") {
+		if (elementos[h] == NULL) {
+			elementos[h] = new noh;
+			elementos[h]->chave = c;
+			elementos[h]->valor = v;
+		} else {
+			cout << "Colidiu: " << c << endl;
+			noh* atual = elementos[h];
+			// Achando local para inserção
+			while (atual->proximo != NULL) {
+				atual = atual->proximo;
+			}
+			noh* novo = new noh;
+			novo->chave = c;
+			novo->valor = v;
+			atual->proximo = novo;
+		}
+	} else {
+		cout << "ITEM JÁ ESTÁ NA TABELA!" << endl;
+	}
+}
+*/
+}
+
+bool TabelaH::Existe (Dado* deus) {
+	int h;
+	h = FuncaoHash(deus);
+
+	if ((mElementos[h] != NULL) && (mElementos[h]->mConteudo.id == deus.id)) {
+		return true;
+	} else {
+		Noh* atual = mElementos[h];
+
+		while ((atual != NULL) && (atual->mConteudo.id != deus.id)) {
+			atual = atual->mProximo;
+		}
+
+		if ((atual != NULL) && (atual->mConteudo.id == deus.id)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+}
+
 void Menu() {
 	cout <<"***********************************************" << endl;
 	cout << "Entre com a opção desejada:" << endl;
-	cout << "1 para inserir novo ---- no arquivo;" << endl;
-	cout << "2 para remover ---- do arquivo;" << endl;
-	cout << "3 para consultar ----- no arquivo;" << endl;
+	cout << "1 para inserir um novo deus no arquivo;" << endl;
+	cout << "2 para remover um deus do arquivo;" << endl;
+	cout << "3 para consultar um deus no arquivo;" << endl;
 	cout << "4 para imprimir todos registros;" << endl;
 	cout << "0 para sair" << endl;
 	cout <<"*************************************************" << endl;
