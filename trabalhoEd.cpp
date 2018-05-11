@@ -6,6 +6,10 @@
 */
 
 #include <iostream>
+#include <cstdlib>
+#include <cstring>
+#include <string>
+#include <fstream>
 #include "trabalhoEd.h"
 
 /*
@@ -14,8 +18,8 @@
 	char dominio[10];
 	char biografia[200]
 */
-int FuncaoHash (Dado deus) {
-	int h = deus.id % TAM_BLOCO;
+int FuncaoHash (Dado* deus) {
+	int h = deus->id % TAM_BLOCO;
 
 	return h;
 }
@@ -60,51 +64,50 @@ void TabelaH::Insere (Dado* deus) {
 	h = FuncaoHash(deus);
 
 	if (Existe(deus)) {
-		// Colidiu
-	}
-
-/*
-void tabelaHash::insere(string c, string v) {
-	int h;
-	h = funcaoHash(c, capacidade);
-	if (recupera(c) == "NÃO ENCONTRADO!") {
-		if (elementos[h] == NULL) {
-			elementos[h] = new noh;
-			elementos[h]->chave = c;
-			elementos[h]->valor = v;
-		} else {
-			cout << "Colidiu: " << c << endl;
-			noh* atual = elementos[h];
-			// Achando local para inserção
-			while (atual->proximo != NULL) {
-				atual = atual->proximo;
-			}
-			noh* novo = new noh;
-			novo->chave = c;
-			novo->valor = v;
-			atual->proximo = novo;
-		}
+		cout << "O item já se encontra na tabela" << endl;
 	} else {
-		cout << "ITEM JÁ ESTÁ NA TABELA!" << endl;
+		if (mElementos[h] == NULL) {
+			mElementos[h] = new Noh;
+			mElementos[h]->mConteudo.id = deus->id;
+			strncpy(mElementos[h]->mConteudo.nome, deus->nome, 49);//mElementos[h]->mConteudo.nome[49] = deus->nome[50];
+			mElementos[h]->mConteudo.nome[50] = '\0';
+			strncpy(mElementos[h]->mConteudo.dominio, deus->dominio, 9);//mElementos[h]->mConteudo.dominio[10] = deus->dominio[10];
+			mElementos[h]->mConteudo.dominio[10] ='\0';
+			strncpy(mElementos[h]->mConteudo.biografia, deus->biografia, 199);//mElementos[h]->mConteudo.biografia[200] = deus->biografia[200];
+			mElementos[h]->mConteudo.biografia[200] = '\0';
+		} else {
+			Noh* atual = mElementos[h];
+
+			while (atual->mProximo != NULL) {
+				atual = atual->mProximo;
+			}
+
+			Noh* novo = new Noh;
+			novo->mConteudo.id = deus->id;
+			strncpy(novo->mConteudo.nome, deus->nome, 49);//novo->mConteudo.nome[49] = deus->nome[50];
+			novo->mConteudo.nome[50] = '\0';
+			strncpy(novo->mConteudo.dominio, deus->dominio, 9);
+			novo->mConteudo.dominio[10] ='\0';
+			strncpy(novo->mConteudo.biografia, deus->biografia, 199);		
+			novo->mConteudo.biografia[200] = '\0';
+		}
 	}
-}
-*/
 }
 
 bool TabelaH::Existe (Dado* deus) {
 	int h;
 	h = FuncaoHash(deus);
 
-	if ((mElementos[h] != NULL) && (mElementos[h]->mConteudo.id == deus.id)) {
+	if ((mElementos[h] != NULL) && (mElementos[h]->mConteudo.id == deus->id)) {
 		return true;
 	} else {
 		Noh* atual = mElementos[h];
 
-		while ((atual != NULL) && (atual->mConteudo.id != deus.id)) {
+		while ((atual != NULL) && (atual->mConteudo.id != deus->id)) {
 			atual = atual->mProximo;
 		}
 
-		if ((atual != NULL) && (atual->mConteudo.id == deus.id)) {
+		if ((atual != NULL) && (atual->mConteudo.id == deus->id)) {
 			return true;
 		} else {
 			return false;
@@ -112,13 +115,29 @@ bool TabelaH::Existe (Dado* deus) {
 	}
 }
 
+void TabelaH::Imprime () {
+	Noh* atual;
+	for (int i = 0; i < mCapacidade; ++i) {
+		cout << i << ": ";
+		atual = mElementos[i];
+
+		while (atual != NULL) {
+			cout << "[" << atual->mConteudo.id << "/" << atual->mConteudo.nome
+			<< atual->mConteudo.dominio << "/" << atual->mConteudo.biografia << "]->";
+			atual = atual->mProximo;
+		}
+		cout << "NULL " << endl << endl;
+	}
+}
+
 void Menu() {
-	cout <<"***********************************************" << endl;
+	cout << endl;
+	cout << "****************************************************" <<endl;
 	cout << "Entre com a opção desejada:" << endl;
 	cout << "1 para inserir um novo deus no arquivo;" << endl;
 	cout << "2 para remover um deus do arquivo;" << endl;
 	cout << "3 para consultar um deus no arquivo;" << endl;
 	cout << "4 para imprimir todos registros;" << endl;
 	cout << "0 para sair" << endl;
-	cout <<"*************************************************" << endl;
+	cout <<"****************************************************" << endl << endl;
 }

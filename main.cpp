@@ -13,6 +13,10 @@
 */
 
 #include <iostream>
+#include <cstdlib>
+#include <cstring>
+#include <string>
+#include <fstream>
 #include "trabalhoEd.h"
 
 using namespace std;
@@ -26,33 +30,53 @@ int main() {
 		cin >> opcao;
 		switch (opcao) {
 			case 0:
+			{
 				cout << "Programa terminado." << endl;
 				break;
+			}
 			case 1:
+			{
 				// Subprograma para inserir um novo objeto no arquivo
 				Deuses* deus = new Deuses;
 				deus->id = rand() % 64;
-				cin >> deus->nome >> deus->dominio >> deus->biografia;
 
+				cin.getline(deus->nome, 50);
+
+				cin.getline(deus->dominio, 10);
+				
+				cin.getline(deus->biografia, 200);
+				
 				tabelaCadastro.Insere(deus);
 				break;
+			}
 			case 2:
+			{
 				// Subprograma para remover um objeto do arquivo
-				
+
 				break;
+			}
 			case 3:
+			{
 				// Subprograma para consultar um objeto no arquivo
 				break;
+			}
 			case 4:
+			{
+				tabelaCadastro.Imprime();
 				// Subprograma para imprimir todo o conteúdo do arquivo, na ordem de armazenamento
 				break;
+			}
 			case 5:
+			{
 				// Subprograma para imprimir os registros de um dado bloco de modo ordenado, caso o
 				// armazenamento não seja feito de forma ordenada
 				break;
+			}
 			default:
+			{
 				cout << "Opção não cadastrada! Tente novamente." << endl;
 				break;
+			}
 		}
 	} while (opcao != 0);
 	return 0;

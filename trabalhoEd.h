@@ -9,6 +9,10 @@
 #define TRABALHOED_H
 
 #include <iostream>
+#include <cstdlib>
+#include <cstring>
+#include <string>
+#include <fstream>
 #define TAM_BLOCO 16
 
 using namespace std;
@@ -24,7 +28,7 @@ struct Deuses {
 
 typedef Deuses Dado;
 
-int FuncaoHash (Dado deus);
+int FuncaoHash (Dado* deus);
 
 class Noh {
 	friend class TabelaH;
@@ -38,12 +42,12 @@ class Noh {
 
 class TabelaH {
 	public:
-		TabelaH (unsigned int cap = 100);
+		TabelaH (unsigned int cap = TAM_BLOCO);
 		~TabelaH ();
 		void Insere (Dado* deus);
-		bool Exite (Dado* deus);
+		bool Existe (Dado* deus);
 		void Remove (int id);
-		void Percorre ();
+		void Imprime ();
 	protected :
 		Noh** mElementos;
 		unsigned int mCapacidade;
