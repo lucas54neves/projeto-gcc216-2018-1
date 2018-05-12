@@ -24,6 +24,7 @@ using namespace std;
 int main() {
 	cout << "Sistema de cadastro em Hashing Extensível" << endl;
 	int opcao;
+	int i = 0;
 	TabelaH tabelaCadastro;
 	do {
 		Menu();
@@ -32,6 +33,7 @@ int main() {
 			case 0:
 			{
 				cout << "Programa terminado." << endl;
+
 				break;
 			}
 			case 1:
@@ -40,13 +42,15 @@ int main() {
 				Deuses* deus = new Deuses;
 				deus->id = rand() % 64;
 
+				cin.ignore();
 				cin.getline(deus->nome, 50);
 
 				cin.getline(deus->dominio, 10);
-				
+
 				cin.getline(deus->biografia, 200);
-				
+
 				tabelaCadastro.Insere(deus);
+
 				break;
 			}
 			case 2:

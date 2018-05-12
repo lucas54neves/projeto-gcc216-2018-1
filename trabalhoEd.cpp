@@ -69,11 +69,11 @@ void TabelaH::Insere (Dado* deus) {
 		if (mElementos[h] == NULL) {
 			mElementos[h] = new Noh;
 			mElementos[h]->mConteudo.id = deus->id;
-			strncpy(mElementos[h]->mConteudo.nome, deus->nome, 49);//mElementos[h]->mConteudo.nome[49] = deus->nome[50];
+			strncpy(mElementos[h]->mConteudo.nome, deus->nome, 49);
 			mElementos[h]->mConteudo.nome[50] = '\0';
-			strncpy(mElementos[h]->mConteudo.dominio, deus->dominio, 9);//mElementos[h]->mConteudo.dominio[10] = deus->dominio[10];
+			strncpy(mElementos[h]->mConteudo.dominio, deus->dominio, 9);
 			mElementos[h]->mConteudo.dominio[10] ='\0';
-			strncpy(mElementos[h]->mConteudo.biografia, deus->biografia, 199);//mElementos[h]->mConteudo.biografia[200] = deus->biografia[200];
+			strncpy(mElementos[h]->mConteudo.biografia, deus->biografia, 199);
 			mElementos[h]->mConteudo.biografia[200] = '\0';
 		} else {
 			Noh* atual = mElementos[h];
@@ -84,12 +84,12 @@ void TabelaH::Insere (Dado* deus) {
 
 			Noh* novo = new Noh;
 			novo->mConteudo.id = deus->id;
-			strncpy(novo->mConteudo.nome, deus->nome, 49);//novo->mConteudo.nome[49] = deus->nome[50];
-			novo->mConteudo.nome[50] = '\0';
+			strncpy(novo->mConteudo.nome, deus->nome, 49);
+			//novo->mConteudo.nome[50] = '\0';
 			strncpy(novo->mConteudo.dominio, deus->dominio, 9);
-			novo->mConteudo.dominio[10] ='\0';
+			//novo->mConteudo.dominio[10] ='\0';
 			strncpy(novo->mConteudo.biografia, deus->biografia, 199);		
-			novo->mConteudo.biografia[200] = '\0';
+			//novo->mConteudo.biografia[200] = '\0';
 		}
 	}
 }
@@ -122,22 +122,22 @@ void TabelaH::Imprime () {
 		atual = mElementos[i];
 
 		while (atual != NULL) {
-			cout << "[" << atual->mConteudo.id << "/" << atual->mConteudo.nome
-			<< atual->mConteudo.dominio << "/" << atual->mConteudo.biografia << "]->";
+			cout << "[" << atual->mConteudo.id << " / " << atual->mConteudo.nome << " / "
+			<< atual->mConteudo.dominio << " / " << atual->mConteudo.biografia << "]->";
 			atual = atual->mProximo;
 		}
-		cout << "NULL " << endl << endl;
+		cout << "NULL " << endl;
 	}
 }
 
 void Menu() {
 	cout << endl;
-	cout << "****************************************************" <<endl;
-	cout << "Entre com a opção desejada:" << endl;
-	cout << "1 para inserir um novo deus no arquivo;" << endl;
-	cout << "2 para remover um deus do arquivo;" << endl;
-	cout << "3 para consultar um deus no arquivo;" << endl;
-	cout << "4 para imprimir todos registros;" << endl;
-	cout << "0 para sair" << endl;
-	cout <<"****************************************************" << endl << endl;
+	cout << "|****************************************************|" <<endl;
+	cout << "| Entre com a opção desejada :                       |" << endl;
+	cout << "| (1) - para inserir um novo deus no arquivo :       |" << endl;
+	cout << "| (2) -  para remover um deus do arquivo :           |" << endl;
+	cout << "| (3) -  para consultar um deus no arquivo :         |" << endl;
+	cout << "| (4) -  para imprimir todos registros :             |" << endl;
+	cout << "| (0) -  para sair :                                 |" << endl;
+	cout <<"|****************************************************|" << endl << endl;
 }
