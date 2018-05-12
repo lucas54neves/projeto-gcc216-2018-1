@@ -132,7 +132,7 @@ void TabelaH::Imprime () {
 
 void Menu() {
 	cout << endl;
-	cout << "|****************************************************|" <<endl;
+	cout << "|*********************[MENU]*************************|" <<endl;
 	cout << "| Entre com a opção desejada :                       |" << endl;
 	cout << "| (1) - para inserir um novo deus no arquivo :       |" << endl;
 	cout << "| (2) -  para remover um deus do arquivo :           |" << endl;
