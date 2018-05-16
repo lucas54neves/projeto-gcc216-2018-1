@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
@@ -19,13 +20,31 @@ int ConverteBinario4Bits (int n) {
     return binario;
 }
 
+int ConverteDecimal (int binario) {
+    int aux[4];
+    int decimal;
+
+    aux[0] = binario / 1000;
+    binario = binario % 1000;
+    aux[1] = binario / 100;
+    binario = binario % 100;
+    aux[2] = binario / 10;
+    aux[3] = binario % 10;
+
+    decimal = (int)(aux[0] * pow(2, 3) + aux[1] * pow(2, 2) + aux[2] * pow(2, 1) + aux[3] * pow(2, 0));
+    return decimal;
+}
+
 int main () {
-    int n;
+    int binario, decimal;
 
-    cin >> n;
-
-    cout << "Decimal(de 0 até 15): " << n << endl;
-    cout << "Binário de 4 bits: " << ConverteBinario4Bits(n) << endl;
-
+    for (int i = 0; i < 16; ++i) {
+        cout << "###" << endl;
+        cout << "Decimal: " << i << endl;
+        binario = ConverteBinario4Bits(i);
+        decimal = ConverteDecimal(binario);
+        cout << "Binário de 4 bits: " << binario << endl;
+        cout << "Decimal: " << decimal << endl;
+    }
     return 0;
 }
