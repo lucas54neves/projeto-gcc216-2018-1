@@ -6,6 +6,7 @@
 */
 
 #include <iostream>
+#include <cmath>
 #include <cstdlib>
 #include <cstring>
 #include <string>
@@ -50,8 +51,9 @@ TabelaH::TabelaH (unsigned int cap) : mCapacidade (cap) {
 TabelaH::~TabelaH () {
 	for (int i = 0; i < mCapacidade; ++i) {
 		Noh* aquelequemorre = mElementos[i];
+		Noh* aux;
 		while (aquelequemorre != NULL) {
-			Noh* aux = aquelequemorre;
+			aux = aquelequemorre;
 			aquelequemorre = aquelequemorre->mProximo;
 			delete aux;
 		}
@@ -81,15 +83,15 @@ void TabelaH::Insere (Dado* deus) {
 			while (atual->mProximo != NULL) {
 				atual = atual->mProximo;
 			}
-
+			cout << "Funciona agora2 !!!" << endl;
 			Noh* novo = new Noh;
 			novo->mConteudo.id = deus->id;
 			strncpy(novo->mConteudo.nome, deus->nome, 49);
-			//novo->mConteudo.nome[50] = '\0';
+			novo->mConteudo.nome[50] = '\0';
 			strncpy(novo->mConteudo.dominio, deus->dominio, 9);
-			//novo->mConteudo.dominio[10] ='\0';
+			novo->mConteudo.dominio[10] ='\0';
 			strncpy(novo->mConteudo.biografia, deus->biografia, 199);		
-			//novo->mConteudo.biografia[200] = '\0';
+			novo->mConteudo.biografia[200] = '\0';
 		}
 	}
 }
@@ -130,14 +132,79 @@ void TabelaH::Imprime () {
 	}
 }
 
+int TabelaH::ConverteBinario4Bits () {
+    int aux[4];
+    int resto, binario;
+
+    Noh* temp;
+    aux[3] = temp->mConteudo.id % 2;
+    resto = temp->mConteudo.id / 2;
+    aux[2] = resto % 2;
+    resto = resto / 2;
+    aux[1] = resto % 2;
+    resto = resto / 2;
+    aux[0] = resto % 2;
+
+    binario = aux[0]*1000 + aux[1]*100 + aux[2]*10 + aux[3]*1;
+
+    return binario;
+}
+
+int TabelaH::ConverteDecimal (int binario) {
+    int aux[4];
+    int decimal;
+
+    aux[0] = binario / 1000;
+    binario = binario % 1000;
+    aux[1] = binario / 100;
+    binario = binario % 100;
+    aux[2] = binario / 10;
+    aux[3] = binario % 10;
+
+    decimal = (int)(aux[0] * pow(2, 3) + aux[1] * pow(2, 2) + aux[2] * pow(2, 1) + aux[3] * pow(2, 0));
+    return decimal;
+}
+
+void InserirDados (TabelaH tabelaCadastro) {
+	Deuses* deus = new Deuses;
+	deus->id = rand() % 64;
+
+	// Leitura de Dados:
+	cin.ignore();
+	cin.getline(deus->nome, 50);
+	cin.getline(deus->dominio, 10);
+	cin.getline(deus->biografia, 200);
+
+	cout << "Funciona agora000 !!!" << endl;
+	tabelaCadastro.Insere(deus);
+
+	cout << "Aqui !" << endl;
+	int bin = tabelaCadastro.ConverteBinario4Bits();
+	// Abertura para salvar no arquivo:
+	ofstream saida("Conteudo.dat", ios::binary|ios::app);
+	saida.write ((const char *) (&tabelaCadastro), sizeof(TabelaH));
+	saida.close();
+
+	cout << "Aqui2 !" << endl;
+	ofstream saida2("Enderecos.dat", ios::binary|ios::app);
+	saida2.write((const char *) (&bin), sizeof(int));
+	saida2.close();
+
+	cout << "Aqui3 !" << endl;
+	delete deus;
+
+	//cout << "Deus com id " << tabelaCadastro.mConteudo.id  << " inserido com sucesso!" << endl;
+}
+
 void Menu() {
 	cout << endl;
-	cout << "|*********************[MENU]*************************|" <<endl;
-	cout << "| Entre com a opção desejada :                       |" << endl;
-	cout << "| (1) - para inserir um novo deus no arquivo :       |" << endl;
-	cout << "| (2) -  para remover um deus do arquivo :           |" << endl;
-	cout << "| (3) -  para consultar um deus no arquivo :         |" << endl;
-	cout << "| (4) -  para imprimir todos registros :             |" << endl;
-	cout << "| (0) -  para sair :                                 |" << endl;
-	cout <<"|****************************************************|" << endl << endl;
+	cout << "|*********************[MENU]*************************|" << endl;
+	cout << "| Entre com a opção desejada:                        |" << endl;
+	cout << "| (1) - para inserir um novo deus no arquivo:        |" << endl;
+	cout << "| (2) - para remover um deus do arquivo:             |" << endl;
+	cout << "| (3) - para consultar um deus no arquivo:           |" << endl;
+	cout << "| (4) - para imprimir todos registros:               |" << endl;
+	cout << "| (0) - para sair:                                   |" << endl;
+	cout << "|****************************************************|" << endl;
+	cout << endl;
 }

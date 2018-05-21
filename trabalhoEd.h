@@ -9,6 +9,7 @@
 #define TRABALHOED_H
 
 #include <iostream>
+#include <cmath>
 #include <cstdlib>
 #include <cstring>
 #include <string>
@@ -16,8 +17,6 @@
 #define TAM_BLOCO 16
 
 using namespace std;
-
-void Menu ();
 
 struct Deuses {
 	int id;
@@ -29,6 +28,8 @@ struct Deuses {
 typedef Deuses Dado;
 
 int FuncaoHash (Dado* deus);
+
+class TabelaH;
 
 class Noh {
 	friend class TabelaH;
@@ -48,9 +49,14 @@ class TabelaH {
 		bool Existe (Dado* deus);
 		void Remove (int id);
 		void Imprime ();
+		int ConverteBinario4Bits ();
+		int ConverteDecimal (int binario);
 	protected :
 		Noh** mElementos;
 		unsigned int mCapacidade;
 };
+
+void InserirDados (TabelaH tabelaCadastro);
+void Menu ();
 
 #endif

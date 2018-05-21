@@ -13,6 +13,7 @@
 */
 
 #include <iostream>
+#include <cmath>
 #include <cstdlib>
 #include <cstring>
 #include <string>
@@ -39,18 +40,8 @@ int main() {
 			case 1:
 			{
 				// Subprograma para inserir um novo objeto no arquivo
-				Deuses* deus = new Deuses;
-				deus->id = rand() % 64;
-
-				cin.ignore();
-				cin.getline(deus->nome, 50);
-
-				cin.getline(deus->dominio, 10);
-
-				cin.getline(deus->biografia, 200);
-
-				tabelaCadastro.Insere(deus);
-
+				InserirDados(tabelaCadastro);
+				cout << "Funciona agora !!!" << endl;
 				break;
 			}
 			case 2:
