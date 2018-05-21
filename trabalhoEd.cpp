@@ -171,8 +171,11 @@ void InserirDados (TabelaH tabelaCadastro) {
 
 	// Leitura de Dados:
 	cin.ignore();
+	cout << "Entre com o nome do deus" << endl;
 	cin.getline(deus->nome, 50);
+	cout << "Entre com o domínio do deus" << endl;
 	cin.getline(deus->dominio, 10);
+	cout << "Entre com a biografia do deus" << endl;
 	cin.getline(deus->biografia, 200);
 
 	cout << "Funciona agora000 !!!" << endl;
