@@ -55,8 +55,8 @@ int main() {
 			}
 			case 4:
 			{
-				tabelaCadastro->Imprime();
 				// Subprograma para imprimir todo o conteúdo do arquivo, na ordem de armazenamento
+				tabelaCadastro->Imprime();
 				break;
 			}
 			case 5:

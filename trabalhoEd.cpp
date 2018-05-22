@@ -134,7 +134,7 @@ void TabelaH::Imprime () {
 	}
 }
 
-int TabelaH::ConverteBinario4Bits (Dado* deus) {
+int TabelaH::ConverteParaBinario (Dado* deus) {
     int aux[4];
     int resto, binario;
 
@@ -157,7 +157,7 @@ int TabelaH::ConverteBinario4Bits (Dado* deus) {
     return binario;
 }
 
-int ConverteDecimal (int binario) {
+int ConverteParaDecimal (int binario) {
     int aux[4];
     int decimal;
 
@@ -187,7 +187,7 @@ void InserirDados (TabelaH* tabelaCadastro) {
 
 	tabelaCadastro->Insere(deus);
 
-	int bin = tabelaCadastro->ConverteBinario4Bits(deus);
+	int bin = tabelaCadastro->ConverteParaBinario(deus);
 
 	
 	// Abertura para salvar no arquivo:
@@ -199,7 +199,7 @@ void InserirDados (TabelaH* tabelaCadastro) {
 	saida2.write((const char *) (&bin), sizeof(int));
 	saida2.close();
 
-	cout << endl << "Deus com id " <<  ConverteDecimal(bin) << " inserido com sucesso!" << endl;
+	cout << endl << "Deus com id " <<  ConverteParaDecimal(bin) << " inserido com sucesso!" << endl;
 
 	delete deus;
 }
