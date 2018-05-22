@@ -26,7 +26,7 @@ int main() {
 	cout << "Sistema de cadastro em Hashing Extensível" << endl;
 	int opcao;
 	int i = 0;
-	TabelaH tabelaCadastro;
+	TabelaH* tabelaCadastro =  new TabelaH;
 	do {
 		Menu();
 		cin >> opcao;
@@ -34,14 +34,12 @@ int main() {
 			case 0:
 			{
 				cout << "Programa terminado." << endl;
-
 				break;
 			}
 			case 1:
 			{
 				// Subprograma para inserir um novo objeto no arquivo
 				InserirDados(tabelaCadastro);
-				cout << "Funciona agora !!!" << endl;
 				break;
 			}
 			case 2:
@@ -57,7 +55,7 @@ int main() {
 			}
 			case 4:
 			{
-				tabelaCadastro.Imprime();
+				tabelaCadastro->Imprime();
 				// Subprograma para imprimir todo o conteúdo do arquivo, na ordem de armazenamento
 				break;
 			}
@@ -74,5 +72,6 @@ int main() {
 			}
 		}
 	} while (opcao != 0);
+	delete tabelaCadastro;
 	return 0;
 }

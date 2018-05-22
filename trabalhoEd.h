@@ -49,14 +49,14 @@ class TabelaH {
 		bool Existe (Dado* deus);
 		void Remove (int id);
 		void Imprime ();
-		int ConverteBinario4Bits ();
-		int ConverteDecimal (int binario);
+		int ConverteBinario4Bits (Dado* deus);
 	protected :
 		Noh** mElementos;
 		unsigned int mCapacidade;
 };
 
-void InserirDados (TabelaH tabelaCadastro);
+void InserirDados (TabelaH* tabelaCadastro);
 void Menu ();
+int ConverteDecimal (int binario);
 
 #endif

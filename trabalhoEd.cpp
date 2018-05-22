@@ -67,6 +67,7 @@ void TabelaH::Insere (Dado* deus) {
 
 	if (Existe(deus)) {
 		cout << "O item já se encontra na tabela" << endl;
+		return;
 	} else {
 		if (mElementos[h] == NULL) {
 			mElementos[h] = new Noh;
@@ -83,7 +84,7 @@ void TabelaH::Insere (Dado* deus) {
 			while (atual->mProximo != NULL) {
 				atual = atual->mProximo;
 			}
-			cout << "Funciona agora2 !!!" << endl;
+			
 			Noh* novo = new Noh;
 			novo->mConteudo.id = deus->id;
 			strncpy(novo->mConteudo.nome, deus->nome, 49);
@@ -92,6 +93,7 @@ void TabelaH::Insere (Dado* deus) {
 			novo->mConteudo.dominio[10] ='\0';
 			strncpy(novo->mConteudo.biografia, deus->biografia, 199);		
 			novo->mConteudo.biografia[200] = '\0';
+			atual->mProximo = novo;
 		}
 	}
 }
@@ -132,11 +134,15 @@ void TabelaH::Imprime () {
 	}
 }
 
-int TabelaH::ConverteBinario4Bits () {
+int TabelaH::ConverteBinario4Bits (Dado* deus) {
     int aux[4];
     int resto, binario;
 
-    Noh* temp;
+    int h;
+	h = FuncaoHash(deus);
+
+	Noh* temp = mElementos[h];
+
     aux[3] = temp->mConteudo.id % 2;
     resto = temp->mConteudo.id / 2;
     aux[2] = resto % 2;
@@ -147,10 +153,11 @@ int TabelaH::ConverteBinario4Bits () {
 
     binario = aux[0]*1000 + aux[1]*100 + aux[2]*10 + aux[3]*1;
 
+    temp->mConteudo.id = binario;
     return binario;
 }
 
-int TabelaH::ConverteDecimal (int binario) {
+int ConverteDecimal (int binario) {
     int aux[4];
     int decimal;
 
@@ -165,49 +172,61 @@ int TabelaH::ConverteDecimal (int binario) {
     return decimal;
 }
 
-void InserirDados (TabelaH tabelaCadastro) {
-	Deuses* deus = new Deuses;
+void InserirDados (TabelaH* tabelaCadastro) {
+	Dado* deus = new Dado;
 	deus->id = rand() % 64;
 
 	// Leitura de Dados:
 	cin.ignore();
-	cout << "Entre com o nome do deus" << endl;
+	cout << "Entre com o nome do deus:" << endl;
 	cin.getline(deus->nome, 50);
-	cout << "Entre com o domínio do deus" << endl;
+	cout << "Entre com o domínio do deus:" << endl;
 	cin.getline(deus->dominio, 10);
-	cout << "Entre com a biografia do deus" << endl;
+	cout << "Entre com a biografia do deus:" << endl;
 	cin.getline(deus->biografia, 200);
 
-	cout << "Funciona agora000 !!!" << endl;
-	tabelaCadastro.Insere(deus);
+	tabelaCadastro->Insere(deus);
 
-	cout << "Aqui !" << endl;
-	int bin = tabelaCadastro.ConverteBinario4Bits();
+	int bin = tabelaCadastro->ConverteBinario4Bits(deus);
+
+	
 	// Abertura para salvar no arquivo:
 	ofstream saida("Conteudo.dat", ios::binary|ios::app);
 	saida.write ((const char *) (&tabelaCadastro), sizeof(TabelaH));
 	saida.close();
 
-	cout << "Aqui2 !" << endl;
 	ofstream saida2("Enderecos.dat", ios::binary|ios::app);
 	saida2.write((const char *) (&bin), sizeof(int));
 	saida2.close();
 
-	cout << "Aqui3 !" << endl;
-	delete deus;
+	cout << endl << "Deus com id " <<  ConverteDecimal(bin) << " inserido com sucesso!" << endl;
 
-	//cout << "Deus com id " << tabelaCadastro.mConteudo.id  << " inserido com sucesso!" << endl;
+	delete deus;
 }
 
 void Menu() {
 	cout << endl;
-	cout << "|*********************[MENU]*************************|" << endl;
-	cout << "| Entre com a opção desejada:                        |" << endl;
-	cout << "| (1) - para inserir um novo deus no arquivo:        |" << endl;
-	cout << "| (2) - para remover um deus do arquivo:             |" << endl;
-	cout << "| (3) - para consultar um deus no arquivo:           |" << endl;
-	cout << "| (4) - para imprimir todos registros:               |" << endl;
-	cout << "| (0) - para sair:                                   |" << endl;
-	cout << "|****************************************************|" << endl;
+	cout << "              |*********************[MENU]*************************|    " << endl;
+	cout << "              =                                                    =    " << endl;
+	cout << "             | |        Entre com a opção desejada:               | |   " << endl;
+	cout << "              =                                                    =    " << endl;
+	cout << "              |                                                    |    " << endl;
+	cout << "              | (1) - para inserir um novo deus no arquivo:        |    " << endl;
+	cout << "              |                                                    |    " << endl;
+	cout << "              |                                                    |    " << endl;
+	cout << "              | (2) - para remover um deus do arquivo:             |    " << endl;
+	cout << "              |                                                    |    " << endl;
+	cout << "              |                                                    |    " << endl;
+	cout << "              | (3) - para consultar um deus no arquivo:           |    " << endl;
+	cout << "              |                                                    |    " << endl;
+	cout << "              |                                                    |    " << endl;
+	cout << "              | (4) - para imprimir todos registros:               |    " << endl;
+	cout << "              |                                                    |    " << endl;
+	cout << "              |                                                    |    " << endl;
+	cout << "              | (0) - para sair:                                   |    " << endl;
+	cout << "              =                                                    =    " << endl;
+	cout << "             | |                                                  | |   " << endl;
+	cout << "              =                                                    =    " << endl;
+	cout << "              |****************************************************|    " << endl;
 	cout << endl;
 }
