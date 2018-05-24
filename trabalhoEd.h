@@ -14,7 +14,8 @@
 #include <cstring>
 #include <string>
 #include <fstream>
-#define TAM_BLOCO 16
+#define CAP_TAB 16
+#define CAP_BLOCO 4
 
 using namespace std;
 
@@ -27,36 +28,39 @@ struct Deuses {
 
 typedef Deuses Dado;
 
-int FuncaoHash (Dado* deus);
+int FuncaoHash (int i);
 
-class TabelaH;
-
-class Noh {
+class BlocosDados {
 	friend class TabelaH;
 	public:
-		Noh ();
-		~Noh ();
+		BlocosDados ();
+		~BlocosDados ();
+		void InserePrimeiro (Dado deus);
+		void InsereDepois (Dado deus);
+		inline bool EmUso();
 	protected:
-		Noh* mProximo;
-		Dado mConteudo;
+		bool mUso;
+		Dado mBloco[CAP_TAB];
+		unsigned int mTamBloco;
+		int mCabecalho;
 };
 
 class TabelaH {
 	public:
-		TabelaH (unsigned int cap = TAM_BLOCO);
+		TabelaH (unsigned int cap = CAP_TAB);
+		TabelaH ();
 		~TabelaH ();
-		void Insere (Dado* deus);
-		bool Existe (Dado* deus);
+		void Insere (Dado deus);
 		void Remove (int id);
-		void Imprime ();
-		int ConverteParaBinario (Dado* deus);
+		bool PosOcupada(int pos);
 	protected :
-		Noh** mElementos;
+		int* mElementos;
 		unsigned int mCapacidade;
 };
 
+int ConverteBinario (int decimal);
 void InserirDados (TabelaH* tabelaCadastro);
 void Menu ();
-int ConverteParaDecimal (int binario);
+int ConverteDecimal (int binario);
 
 #endif

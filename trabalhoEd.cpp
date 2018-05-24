@@ -12,6 +12,8 @@
 #include <string>
 #include <fstream>
 #include "trabalhoEd.h"
+#define Cap_TAB 16
+#define CAP_BLOCO 4
 
 /*
 	int id;
@@ -19,132 +21,104 @@
 	char dominio[10];
 	char biografia[200]
 */
-int FuncaoHash (Dado* deus) {
-	int h = deus->id % TAM_BLOCO;
 
-	return h;
+int FuncaoHash (int i) {
+	h = i % Cap_TAB;
+	return ConverteBinario(h);
 }
 
-Noh::Noh () {
-	mProximo = NULL;
-	mConteudo.id = -1;
-	mConteudo.nome[50] = ' ';
-	mConteudo.dominio[10] = ' ';
-	mConteudo.biografia[200] = ' ';
+BlocosDados::BlocosDados () {
+	for (int i = 0; i < CAP_BLOCO; ++i) {
+		mBloco[i].id = -1;
+		mBloco[i].nome[50] = ' ';
+		mBloco[i].dominio[10] = ' ';
+		mBloco[i].biografia[200] = ' ';
+	}
+	mTamBloco = 0;
+	mUso = false;
 }
 
-Noh::~Noh () {
-	mProximo = NULL;
-	mConteudo.id = -1;
-	mConteudo.nome[50] = ' ';
-	mConteudo.dominio[10] = ' ';
-	mConteudo.biografia[200] = ' ';
+void BlocosDados::Insere (Dado deus) {
+	mBloco[mTamBloco] = deus;
+	++mTamBloco;
+	mUso = true;
+	mCabecalho = FuncaoHash(deus.id);
 }
 
-TabelaH::TabelaH (unsigned int cap) : mCapacidade (cap) {
-	mElementos = new Noh*[cap];
-	for (int i = 0; i < cap; ++i) {
-		mElementos[i] = NULL;
+BlocosDados::~BlocosDados () {
+	for (int i = 0; i < CAP_BLOCO; ++i) {
+		mBloco[i].id = -1;
+		mBloco[i].nome[50] = ' ';
+		mBloco[i].dominio[10] = ' ';
+		mBloco[i].biografia[200] = ' ';
+	}
+	mTamBloco = 0;
+	mCabecalho = -1;
+}
+
+bool BlocosDados::EmUso () {
+	return mUso;
+}
+
+TabelaH::TabelaH (unsigned int cap) : mCapacidade(cap) {
+	mElementos = new int[mCapacidade];
+	for (int i = 0; i < mCapacidade; ++i) {
+		mElementos[i] = -1;
 	}
 }
+
+void TabelaH::Insere (Dado deus) {
+	int pos = ConverteDecimal(FuncaoHash(deus.id));
+	if (PosOcupada(pos)) { // Bloco existe
+		// Posição no arquivo = mElementos[pos]
+		// Puxa no arquivo binário o bloco
+		// Verifica se o bloco não está cheio
+	} else { // Bloco não existe
+		// Crie um novo bloco
+	}
+}
+
+// void TabelaH::Imprime () {
+// 	Noh* atual;
+// 	for (int i = 0; i < mCapacidade; ++i) {
+// 		cout << i << ": ";
+// 		atual = mElementos[i];
+
+// 		while (atual != NULL) {
+// 			cout << "[" << atual->mConteudo.id << " / " << atual->mConteudo.nome << " / "
+// 			<< atual->mConteudo.dominio << " / " << atual->mConteudo.biografia << "]->";
+// 			atual = atual->mProximo;
+// 		}
+// 		cout << "NULL " << endl;
+// 	}
+// }
 
 TabelaH::~TabelaH () {
-	for (int i = 0; i < mCapacidade; ++i) {
-		Noh* aquelequemorre = mElementos[i];
-		Noh* aux;
-		while (aquelequemorre != NULL) {
-			aux = aquelequemorre;
-			aquelequemorre = aquelequemorre->mProximo;
-			delete aux;
-		}
+	ofstream saida("Enderecos.txt");
+	for (int i = 0; i < mTamHash; ++i) {
+		saida << ConverteBinario(i) << " " << mElementos[i] << endl;
 	}
+	saida << mTamHash << endl; 
+
+	saida.close();
+
 	delete[] mElementos;
 }
 
-void TabelaH::Insere (Dado* deus) {
-	int h;
-	h = FuncaoHash(deus);
-
-	if (Existe(deus)) {
-		cout << "O item já se encontra na tabela" << endl;
-		return;
+bool TabelaH::PosOcupada (int pos) {
+	if (mElementos[pos] == -1) {
+		return false;
 	} else {
-		if (mElementos[h] == NULL) {
-			mElementos[h] = new Noh;
-			mElementos[h]->mConteudo.id = deus->id;
-			strncpy(mElementos[h]->mConteudo.nome, deus->nome, 49);
-			mElementos[h]->mConteudo.nome[50] = '\0';
-			strncpy(mElementos[h]->mConteudo.dominio, deus->dominio, 9);
-			mElementos[h]->mConteudo.dominio[10] ='\0';
-			strncpy(mElementos[h]->mConteudo.biografia, deus->biografia, 199);
-			mElementos[h]->mConteudo.biografia[200] = '\0';
-		} else {
-			Noh* atual = mElementos[h];
-
-			while (atual->mProximo != NULL) {
-				atual = atual->mProximo;
-			}
-			
-			Noh* novo = new Noh;
-			novo->mConteudo.id = deus->id;
-			strncpy(novo->mConteudo.nome, deus->nome, 49);
-			novo->mConteudo.nome[50] = '\0';
-			strncpy(novo->mConteudo.dominio, deus->dominio, 9);
-			novo->mConteudo.dominio[10] ='\0';
-			strncpy(novo->mConteudo.biografia, deus->biografia, 199);		
-			novo->mConteudo.biografia[200] = '\0';
-			atual->mProximo = novo;
-		}
-	}
-}
-
-bool TabelaH::Existe (Dado* deus) {
-	int h;
-	h = FuncaoHash(deus);
-
-	if ((mElementos[h] != NULL) && (mElementos[h]->mConteudo.id == deus->id)) {
 		return true;
-	} else {
-		Noh* atual = mElementos[h];
-
-		while ((atual != NULL) && (atual->mConteudo.id != deus->id)) {
-			atual = atual->mProximo;
-		}
-
-		if ((atual != NULL) && (atual->mConteudo.id == deus->id)) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 }
 
-void TabelaH::Imprime () {
-	Noh* atual;
-	for (int i = 0; i < mCapacidade; ++i) {
-		cout << i << ": ";
-		atual = mElementos[i];
-
-		while (atual != NULL) {
-			cout << "[" << atual->mConteudo.id << " / " << atual->mConteudo.nome << " / "
-			<< atual->mConteudo.dominio << " / " << atual->mConteudo.biografia << "]->";
-			atual = atual->mProximo;
-		}
-		cout << "NULL " << endl;
-	}
-}
-
-int TabelaH::ConverteParaBinario (Dado* deus) {
+int ConverteBinario (int decimal) {
     int aux[4];
     int resto, binario;
 
-    int h;
-	h = FuncaoHash(deus);
-
-	Noh* temp = mElementos[h];
-
-    aux[3] = temp->mConteudo.id % 2;
-    resto = temp->mConteudo.id / 2;
+    aux[3] = decimal % 2;
+    resto = decimal / 2;
     aux[2] = resto % 2;
     resto = resto / 2;
     aux[1] = resto % 2;
@@ -153,11 +127,10 @@ int TabelaH::ConverteParaBinario (Dado* deus) {
 
     binario = aux[0]*1000 + aux[1]*100 + aux[2]*10 + aux[3]*1;
 
-    temp->mConteudo.id = binario;
     return binario;
 }
 
-int ConverteParaDecimal (int binario) {
+int ConverteDecimal (int binario) {
     int aux[4];
     int decimal;
 
@@ -172,37 +145,31 @@ int ConverteParaDecimal (int binario) {
     return decimal;
 }
 
-void InserirDados (TabelaH* tabelaCadastro) {
-	Dado* deus = new Dado;
-	deus->id = rand() % 64;
-
+void InsereDados (TabelaH* tabelaCadastro) {
+	Dado deus;
 	// Leitura de Dados:
+	deus.id = rand() % 64;
 	cin.ignore();
 	cout << "Entre com o nome do deus:" << endl;
-	cin.getline(deus->nome, 50);
+	cin.getline(deus.nome, 50);
 	cout << "Entre com o domínio do deus:" << endl;
-	cin.getline(deus->dominio, 10);
+	cin.getline(deus.dominio, 10);
 	cout << "Entre com a biografia do deus:" << endl;
-	cin.getline(deus->biografia, 200);
-
-	tabelaCadastro->Insere(deus);
-
-	int bin = tabelaCadastro->ConverteParaBinario(deus);
-
+	cin.getline(deus.biografia, 200);
 	
-	// Abertura para salvar no arquivo:
-	ofstream saida("Conteudo.dat", ios::binary|ios::app);
-	saida.write ((const char *) (&tabelaCadastro), sizeof(TabelaH));
-	saida.close();
-
-	ofstream saida2("Enderecos.dat", ios::binary|ios::app);
-	saida2.write((const char *) (&bin), sizeof(int));
-	saida2.close();
-
-	cout << endl << "Deus com id " <<  ConverteParaDecimal(bin) << " inserido com sucesso!" << endl;
-
-	delete deus;
+	tabelaCadastro->Insere(deus);
 }
+
+void RemoveDados () {
+
+	return;
+}
+
+void ConsultaDados () {
+
+	return;
+}
+
 
 void Menu() {
 	cout << endl;
