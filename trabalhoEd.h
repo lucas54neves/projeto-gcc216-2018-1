@@ -42,22 +42,23 @@ class BlocosDados {
 	protected:
 		bool mUso;
 		Dado mBloco[CAP_TAB];
-		unsigned int mTamBloco;
+		int mTamBloco;
 		int mCabecalho;
 		int PosicaoArquivo (BlocosDados* novoBloco);
 };
 
 class TabelaH {
 	public:
-		TabelaH (unsigned int cap = CAP_TAB);
-		TabelaH ();
+		TabelaH (int cap = CAP_TAB);
 		~TabelaH ();
 		void Insere (Dado deus);
 		void Remove (int id);
 		bool PosOcupada (int pos);
+		void LeTabelaArquivo ();
+		void Imprime ();
 	protected :
 		int* mElementos;
-		unsigned int mCapacidade;
+		int mCapacidade;
 };
 
 int ConverteBinario (int decimal);

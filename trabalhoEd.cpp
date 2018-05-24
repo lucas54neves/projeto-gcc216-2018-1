@@ -87,7 +87,8 @@ void BlocosDados::Imprime () {
 	cout << "Tamanho: " << mTamBloco << endl;
 }
 
-TabelaH::TabelaH (unsigned int cap) : mCapacidade(cap) {
+TabelaH::TabelaH (int cap)  {
+	mCapacidade = cap;
 	mElementos = new int[mCapacidade];
 	for (int i = 0; i < mCapacidade; ++i) {
 		mElementos[i] = -1;
@@ -101,6 +102,8 @@ void TabelaH::Insere (Dado deus) {
 		CarregaBloco(auxBloco, mElementos[pos]);
 		auxBloco->Insere(deus);
 		EscreveArquivo(auxBloco, mElementos[pos]);
+		int bytes = auxBloco->PosicaoArquivo(auxBloco);
+		mElementos[pos] = bytes;
 		delete auxBloco;
 		// Posição no arquivo = mElementos[pos]
 		// Puxa no arquivo binário o bloco
@@ -116,27 +119,30 @@ void TabelaH::Insere (Dado deus) {
 	}
 }
 
-// void TabelaH::Imprime () {
-// 	Noh* atual;
-// 	for (int i = 0; i < mCapacidade; ++i) {
-// 		cout << i << ": ";
-// 		atual = mElementos[i];
+void TabelaH::LeTabelaArquivo () {
+	cout << "Aqui3 !!!" << endl;
+	ifstream leituraTH("Enderecos.txt");
+  	int posTH, byte;
+  	while (!leituraTH.eof()) {
+  		leituraTH >> posTH;
+  		leituraTH >> byte;
+  		mElementos[posTH] = byte;
+  	}
+  	leituraTH.close();
+  	cout << "Aqui4 !!!" << endl;
+}
 
-// 		while (atual != NULL) {
-// 			cout << "[" << atual->mConteudo.id << " / " << atual->mConteudo.nome << " / "
-// 			<< atual->mConteudo.dominio << " / " << atual->mConteudo.biografia << "]->";
-// 			atual = atual->mProximo;
-// 		}
-// 		cout << "NULL " << endl;
-// 	}
-// }
+ void TabelaH::Imprime () {
+ 	for (int i = 0; i < mCapacidade; ++i) {
+ 		cout << ConverteBinario(i) << " " <<mElementos[i] << endl;
+ 	}
+ }
 
 TabelaH::~TabelaH () {
-	ofstream saida("Uppsala.txt");
+	ofstream saida("uppsala.txt");
 	for (int i = 0; i < mCapacidade; ++i) {
-		saida << ConverteBinario(i) << " " << mElementos[i] << endl;
+		saida << i  << endl;
 	}
-
 	saida.close();
 
 	delete[] mElementos;
@@ -199,7 +205,7 @@ void InsereDados (TabelaH* tabelaCadastro) {
 }
 
 void EscreveArquivo (BlocosDados* auxBloco, int posBytes) {
-	ofstream salva("Asgard.bin", ios::binary|ios::app);
+	ofstream salva("asgard.bin", ios::binary|ios::app);
 	if (salva.eof()) {
 		salva.write(reinterpret_cast<const char*> (&auxBloco), sizeof(BlocosDados));
 	} else {
@@ -212,7 +218,7 @@ void EscreveArquivo (BlocosDados* auxBloco, int posBytes) {
 int BlocosDados::PosicaoArquivo (BlocosDados* novoBloco) {
 	ifstream Leitura;
 	int pos;
-  	Leitura.open("Asgard.bin", ios::binary);
+  	Leitura.open("asgard.bin", ios::binary);
   	if (Leitura) {
 		Leitura.seekg(0, Leitura.end);
 		int tamArq = Leitura.tellg();
@@ -221,7 +227,7 @@ int BlocosDados::PosicaoArquivo (BlocosDados* novoBloco) {
 		BlocosDados* aux = new BlocosDados;
 		int pos = 0;
 		for (int i = 0; i < tamBloc; i++) {
-  			Leitura.read((const char*) (&aux), sizeof(BlocosDados));
+  			Leitura.read((char*)(&aux), sizeof(BlocosDados));
   			if (aux->mCabecalho == novoBloco->mCabecalho) {
 				pos = i*sizeof(BlocosDados);
 				cout << endl << "posição em bytes : " << pos  << endl <<endl;
@@ -237,10 +243,10 @@ int BlocosDados::PosicaoArquivo (BlocosDados* novoBloco) {
 
 void CarregaBloco (BlocosDados* auxBloco, int posBytes) {
 	ifstream Carregar;
-	Carregar.open("Asgard.bin", ios::binary);
+	Carregar.open("asgard.bin", ios::binary);
 	if (Carregar) {
 		Carregar.seekg(posBytes, ios::cur);
-		Carregar.read((const char*) (&auxBloco), sizeof(BlocosDados));
+		Carregar.read((char*)(&auxBloco), sizeof(BlocosDados));
 	} else {
 		cout << endl <<"Erro na leitura do arquivo ou arquivo inesistente !" << endl << endl;
 	}
@@ -259,7 +265,8 @@ void ConsultaDados () {
 
 void ImprimeArquivoOrdem () {
 	ifstream leitura;
-	leitura.open("Asgard.bin", ios::binary);
+	leitura.open("asgard.bin", ios::binary);
+	cout << "OPA !!" << endl;
 	if (leitura){
 		leitura.seekg(0, leitura.end);
 		int tamArq = leitura.tellg();
@@ -267,13 +274,14 @@ void ImprimeArquivoOrdem () {
 		
 		int quantBloc = tamArq / sizeof(BlocosDados);
   		BlocosDados* auxBloco = new BlocosDados;
-
+  		cout << "OPA 2 !!" << endl;
   		for(int i = 0; i < quantBloc; i++){
-       		leitura.read((const char*)  (&auxBloco), sizeof(BlocosDados));
-       		auxBloco.Imprime();
+       		leitura.read((char*)(&auxBloco), sizeof(BlocosDados));
+       		auxBloco->Imprime();
   		}
+  		leitura.close();
 	}
-	leitura.close();
+	cout << "OPA3 !!" << endl;
 }
 void ImprimeBlocoOrdem () {return;}
 

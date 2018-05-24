@@ -28,17 +28,12 @@ int main() {
 	cout << "Sistema de cadastro em Hashing Extensível" << endl;
 	int opcao;
 	int i = 0;
-	TabelaH* tabelaCadastro =  new TabelaH;
-	ifstream leituraTH;
-  	leituraTH.open("Enderecos.txt");
-  	if (!leituraTH.eof()) {
-  		int posTH, byte;
-  		while (!leituraTH.eof()) {
-  			leituraTH >> posTH >> byte;
-  			tabelaCadastro.Insere(posTH, byte);
-  		}
-  	}
-	
+	cout << "Aqui1 !!!" << endl;
+	TabelaH* tabelaCadastro =  new TabelaH(16);
+	cout << "Aqui2 !!!" << endl;
+	//tabelaCadastro->LeTabelaArquivo();
+	cout << "Aqui5 !!!" << endl;
+	tabelaCadastro->Imprime();
 	do {
 		Menu();
 		cin >> opcao;
@@ -46,35 +41,49 @@ int main() {
 			case 0:
 			{
 				cout << "Programa terminado." << endl;
-				system("clear");
+				
 				break;
 			}
 			case 1:
 			{
 				// Subprograma para inserir um novo objeto no arquivo
-				InsereDados(tabelaCadastro);
-				system("clear");
+				// InsereDados(tabelaCadastro);
+
+				Dado deus;
+				// Leitura de Dados:
+				cout << "Entre com o id do deus:" << endl;
+				cin >> deus.id;
+				cin.ignore();
+				cout << "Entre com o nome do deus:" << endl;
+				cin.getline(deus.nome, 50);
+				cout << "Entre com o domínio do deus:" << endl;
+				cin.getline(deus.dominio, 10);
+				cout << "Entre com a biografia do deus:" << endl;
+				cin.getline(deus.biografia, 200);
+				
+				tabelaCadastro->Insere(deus);
+
 				break;
 			}
 			case 2:
 			{
 				// Subprograma para remover um objeto do arquivo
 				RemoveDados();
-				system("clear");
+				
 				break;
 			}
 			case 3:
 			{
 				// Subprograma para consultar um objeto no arquivo
 				ConsultaDados();
-				system("clear");
+				
 				break;
 			}
 			case 4:
 			{
 				// Subprograma para imprimir todo o conteúdo do arquivo, na ordem de armazenamento
 				ImprimeArquivoOrdem();
-				system("clear");
+				
 				break;
 			}
 			case 5:
@@ -82,13 +91,13 @@ int main() {
 				// Subprograma para imprimir os registros de um dado bloco de modo ordenado, caso o
 				// armazenamento não seja feito de forma ordenada
 				ImprimeBlocoOrdem();
-				system("clear");
+				
 				break;
 			}
 			default:
 			{
 				cout << "Opção não cadastrada! Tente novamente." << endl;
-				system("clear");
+				
 				break;
 			}
 		}
