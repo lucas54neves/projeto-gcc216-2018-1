@@ -35,14 +35,16 @@ class BlocosDados {
 	public:
 		BlocosDados ();
 		~BlocosDados ();
-		void InserePrimeiro (Dado deus);
-		void InsereDepois (Dado deus);
-		inline bool EmUso();
+		void Insere (Dado deus);
+		inline bool EmUso ();
+		bool BlocoCheio ();
+		void Imprime ();
 	protected:
 		bool mUso;
 		Dado mBloco[CAP_TAB];
 		unsigned int mTamBloco;
 		int mCabecalho;
+		int PosicaoArquivo (BlocosDados* novoBloco);
 };
 
 class TabelaH {
@@ -52,7 +54,7 @@ class TabelaH {
 		~TabelaH ();
 		void Insere (Dado deus);
 		void Remove (int id);
-		bool PosOcupada(int pos);
+		bool PosOcupada (int pos);
 	protected :
 		int* mElementos;
 		unsigned int mCapacidade;
@@ -62,5 +64,11 @@ int ConverteBinario (int decimal);
 void InserirDados (TabelaH* tabelaCadastro);
 void Menu ();
 int ConverteDecimal (int binario);
+void EscreveArquivo (BlocosDados* novoBloco, int posBytes);
+void CarregaBloco (BlocosDados* auxBloco, int posBytes);
+void RemoveDados ();
+void ConsultaDados ();
+void ImprimeArquivoOrdem ();
+void ImprimeBlocoOrdem ();
 
 #endif

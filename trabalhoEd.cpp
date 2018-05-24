@@ -23,7 +23,7 @@
 */
 
 int FuncaoHash (int i) {
-	h = i % Cap_TAB;
+	int h = i % Cap_TAB;
 	return ConverteBinario(h);
 }
 
@@ -39,10 +39,21 @@ BlocosDados::BlocosDados () {
 }
 
 void BlocosDados::Insere (Dado deus) {
-	mBloco[mTamBloco] = deus;
-	++mTamBloco;
-	mUso = true;
-	mCabecalho = FuncaoHash(deus.id);
+	if (!EmUso()) {
+		mBloco[mTamBloco] = deus;
+		++mTamBloco;
+		mUso = true;
+		mCabecalho = FuncaoHash(deus.id);
+	} else if (BlocoCheio()) {
+		cout << "|***************[ERRO]***************|" << endl;
+		cout << "| O bloco está cheio.                |" << endl;
+		cout << "| Não é possível inserir mais dados. |" << endl;
+		cout << "|************************************|" << endl;
+		exit(EXIT_FAILURE);
+	} else {
+		mBloco[mTamBloco] = deus;
+		++mTamBloco;
+	}
 }
 
 BlocosDados::~BlocosDados () {
@@ -60,6 +71,22 @@ bool BlocosDados::EmUso () {
 	return mUso;
 }
 
+bool BlocosDados::BlocoCheio () {
+	return (mTamBloco == 4);
+}
+
+void BlocosDados::Imprime () {
+	cout << "Cabeçalho" << mCabecalho << endl;
+	for (int i = 0; i < mTamBloco; ++i) {
+		cout <<" Id: " << mBloco[i].id << endl;
+		cout <<"Nome : " << mBloco[i].nome << endl;
+		cout <<"Dominio : " << mBloco[i].dominio << endl;
+		cout <<"Biografia: " << endl;
+		cout << mBloco[i].biografia << endl;
+	}
+	cout << "Tamanho: " << mTamBloco << endl;
+}
+
 TabelaH::TabelaH (unsigned int cap) : mCapacidade(cap) {
 	mElementos = new int[mCapacidade];
 	for (int i = 0; i < mCapacidade; ++i) {
@@ -70,11 +97,22 @@ TabelaH::TabelaH (unsigned int cap) : mCapacidade(cap) {
 void TabelaH::Insere (Dado deus) {
 	int pos = ConverteDecimal(FuncaoHash(deus.id));
 	if (PosOcupada(pos)) { // Bloco existe
+		BlocosDados* auxBloco = new BlocosDados;
+		CarregaBloco(auxBloco, mElementos[pos]);
+		auxBloco->Insere(deus);
+		EscreveArquivo(auxBloco, mElementos[pos]);
+		delete auxBloco;
 		// Posição no arquivo = mElementos[pos]
 		// Puxa no arquivo binário o bloco
 		// Verifica se o bloco não está cheio
 	} else { // Bloco não existe
 		// Crie um novo bloco
+		BlocosDados* novoBloco = new BlocosDados;
+		novoBloco->Insere(deus);
+		EscreveArquivo(novoBloco, mElementos[pos]);
+		int bytes = novoBloco->PosicaoArquivo(novoBloco);
+		mElementos[pos] = bytes;
+		delete novoBloco;
 	}
 }
 
@@ -94,11 +132,10 @@ void TabelaH::Insere (Dado deus) {
 // }
 
 TabelaH::~TabelaH () {
-	ofstream saida("Enderecos.txt");
-	for (int i = 0; i < mTamHash; ++i) {
+	ofstream saida("Uppsala.txt");
+	for (int i = 0; i < mCapacidade; ++i) {
 		saida << ConverteBinario(i) << " " << mElementos[i] << endl;
 	}
-	saida << mTamHash << endl; 
 
 	saida.close();
 
@@ -148,7 +185,8 @@ int ConverteDecimal (int binario) {
 void InsereDados (TabelaH* tabelaCadastro) {
 	Dado deus;
 	// Leitura de Dados:
-	deus.id = rand() % 64;
+	cout << "Entre com o id do deus:" << endl;
+	cin >> deus.id;
 	cin.ignore();
 	cout << "Entre com o nome do deus:" << endl;
 	cin.getline(deus.nome, 50);
@@ -158,6 +196,55 @@ void InsereDados (TabelaH* tabelaCadastro) {
 	cin.getline(deus.biografia, 200);
 	
 	tabelaCadastro->Insere(deus);
+}
+
+void EscreveArquivo (BlocosDados* auxBloco, int posBytes) {
+	ofstream salva("Asgard.bin", ios::binary|ios::app);
+	if (salva.eof()) {
+		salva.write(reinterpret_cast<const char*> (&auxBloco), sizeof(BlocosDados));
+	} else {
+		salva.seekp(posBytes, ios::cur);
+		salva.write((const char*) (&auxBloco), sizeof(BlocosDados));
+	}
+	salva.close();
+}
+
+int BlocosDados::PosicaoArquivo (BlocosDados* novoBloco) {
+	ifstream Leitura;
+	int pos;
+  	Leitura.open("Asgard.bin", ios::binary);
+  	if (Leitura) {
+		Leitura.seekg(0, Leitura.end);
+		int tamArq = Leitura.tellg();
+		Leitura.seekg(0, Leitura.beg);
+		int tamBloc = tamArq / sizeof(BlocosDados);
+		BlocosDados* aux = new BlocosDados;
+		int pos = 0;
+		for (int i = 0; i < tamBloc; i++) {
+  			Leitura.read((const char*) (&aux), sizeof(BlocosDados));
+  			if (aux->mCabecalho == novoBloco->mCabecalho) {
+				pos = i*sizeof(BlocosDados);
+				cout << endl << "posição em bytes : " << pos  << endl <<endl;
+			}
+  		}
+  	} if (!Leitura) {
+  		cout << endl << "Essa deus não está cadastrado" << endl;
+  		pos = -1;
+  	}
+  	Leitura.close();
+  	return pos;	
+}
+
+void CarregaBloco (BlocosDados* auxBloco, int posBytes) {
+	ifstream Carregar;
+	Carregar.open("Asgard.bin", ios::binary);
+	if (Carregar) {
+		Carregar.seekg(posBytes, ios::cur);
+		Carregar.read((const char*) (&auxBloco), sizeof(BlocosDados));
+	} else {
+		cout << endl <<"Erro na leitura do arquivo ou arquivo inesistente !" << endl << endl;
+	}
+	Carregar.close();
 }
 
 void RemoveDados () {
@@ -170,6 +257,25 @@ void ConsultaDados () {
 	return;
 }
 
+void ImprimeArquivoOrdem () {
+	ifstream leitura;
+	leitura.open("Asgard.bin", ios::binary);
+	if (leitura){
+		leitura.seekg(0, leitura.end);
+		int tamArq = leitura.tellg();
+		leitura.seekg(0, leitura.beg);
+		
+		int quantBloc = tamArq / sizeof(BlocosDados);
+  		BlocosDados* auxBloco = new BlocosDados;
+
+  		for(int i = 0; i < quantBloc; i++){
+       		leitura.read((const char*)  (&auxBloco), sizeof(BlocosDados));
+       		auxBloco.Imprime();
+  		}
+	}
+	leitura.close();
+}
+void ImprimeBlocoOrdem () {return;}
 
 void Menu() {
 	cout << endl;
