@@ -1,2 +1,6 @@
 make
+<<<<<<< HEAD
 make iniciar
+=======
+make executar
+>>>>>>> 5a1e011b84e478e9e2f2ffb71fc6f604948b7292
