@@ -114,7 +114,7 @@ TabelaH::TabelaH (int cap)  {
 TabelaH::~TabelaH () {
 	ofstream saida("uppsala.txt");
 	for (int i = 0; i < mCapacidade; ++i) {
-		saida << ConverteBinario(i) << " - " << i << endl;
+		saida << ConverteBinario(i) << " - " << (i * 5) / 2 << endl;
 	}
 	saida.close();
 
