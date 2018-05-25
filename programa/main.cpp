@@ -29,13 +29,8 @@ using namespace std;
 int main() {
 	cout << "Sistema de cadastro em Hashing Extensível" << endl;
 	int opcao;
-	int i = 0;
-	cout << "Aqui1 !!!" << endl;
 	TabelaH* tabelaCadastro =  new TabelaH(CAP_TABELA);
-	cout << "Aqui2 !!!" << endl;
-	//tabelaCadastro->LeTabelaArquivo();
-	cout << "Aqui5 !!!" << endl;
-	tabelaCadastro->ImprimeTabela();
+	// tabelaCadastro->LeTabelaArquivo();
 	do {
 		Menu();
 		cin >> opcao;

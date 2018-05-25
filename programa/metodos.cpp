@@ -114,7 +114,7 @@ TabelaH::TabelaH (int cap)  {
 TabelaH::~TabelaH () {
 	ofstream saida("uppsala.txt");
 	for (int i = 0; i < mCapacidade; ++i) {
-		saida << i  << endl;
+		saida << ConverteBinario(i) << " - " << i << endl;
 	}
 	saida.close();
 
@@ -146,8 +146,7 @@ void TabelaH::InsereTabela (Dado deus) {
 }
 
 void TabelaH::LeTabelaArquivo () {
-	cout << "Aqui3 !!!" << endl;
-	ifstream leituraTH("Enderecos.txt");
+	ifstream leituraTH("uppsala.txt");
   	int posTH, byte;
   	while (!leituraTH.eof()) {
   		leituraTH >> posTH;
@@ -155,12 +154,11 @@ void TabelaH::LeTabelaArquivo () {
   		mElementos[posTH] = byte;
   	}
   	leituraTH.close();
-  	cout << "Aqui4 !!!" << endl;
 }
 
  void TabelaH::ImprimeTabela () {
  	for (int i = 0; i < mCapacidade; ++i) {
- 		cout << ConverteBinario(i) << " " <<mElementos[i] << endl;
+ 		cout << ConverteBinario(i) << " - " << mElementos[i] << endl;
  	}
  }
 

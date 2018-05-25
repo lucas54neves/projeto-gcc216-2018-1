@@ -13,5 +13,4 @@ clean:
 	rm -rf *.o
 
 iniciar:
-	rm -rf *.o
 	./executar
