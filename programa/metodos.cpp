@@ -96,7 +96,32 @@ bool BlocosDados::BlocoCheio () {
 }
 
 void BlocosDados::ImprimeBloco () {
-	return;
+	cout << "-----[Bloco]-----" << endl;
+	cout << "Tamanho: " << mTamBloco << endl;
+	cout << "Cabeçalho: " << mCabecalho << endl;
+	for (int i = 0; i < mTamBloco; ++i) {
+		cout << "Deus " << i << ":" << endl;
+		cout << "ID: " << mBloco[i].id << endl;
+		cout << "Nome:" << mBloco[i].nome << endl;
+		cout << "Dominio: " << mBloco[i].dominio << endl;
+		cout << "Biografia: " << mBloco[i].biografia << endl;
+		cout << "--------------------------------------------" << endl;
+	}
+}
+
+void BlocosDados::EscreveArquivo (BlocosDados* auxBloco, int posBytes) {
+	ofstream salva("asgard.bin", ios::binary|ios::app);
+	if (mTamBloco == 1) {
+		if (salva.is_open()) {
+			salva.write(reinterpret_cast<const char*> (&mCabecalho), sizeof(int));
+			salva.write(reinterpret_cast<const char*> (&mUso), sizeof(bool));
+			salva.write(reinterpret_cast<const char*> (&mTamBloco), sizeof(int));
+			for (int i = 0; i < CAP_BLOCO; ++i) {
+				salva.write(reinterpret_cast<const char*> (&mBloco[i]), sizeof(Dado));
+			}
+		}	
+	}
+	salva.close();
 }
 
 // Fim da implementação do bloco
@@ -114,7 +139,7 @@ TabelaH::TabelaH (int cap)  {
 TabelaH::~TabelaH () {
 	ofstream saida("uppsala.txt");
 	for (int i = 0; i < mCapacidade; ++i) {
-		saida << ConverteBinario(i) << " - " << (i * 5) / 2 << endl;
+		saida << ConverteBinario(i) << "\t" << mElementos[i] << endl;
 	}
 	saida.close();
 
@@ -127,7 +152,7 @@ void TabelaH::InsereTabela (Dado deus) {
 		BlocosDados* auxBloco = new BlocosDados;
 		CarregaBloco(auxBloco, mElementos[pos]);
 		auxBloco->InsereBloco(deus);
-		EscreveArquivo(auxBloco, mElementos[pos]);
+		auxBloco->EscreveArquivo(auxBloco, mElementos[pos]);
 		int bytes = auxBloco->PosicaoArquivo(auxBloco);
 		mElementos[pos] = bytes;
 		delete auxBloco;
@@ -138,7 +163,7 @@ void TabelaH::InsereTabela (Dado deus) {
 		// Crie um novo bloco
 		BlocosDados* novoBloco = new BlocosDados;
 		novoBloco->InsereBloco(deus);
-		EscreveArquivo(novoBloco, mElementos[pos]);
+		novoBloco->EscreveArquivo(novoBloco, mElementos[pos]);
 		int bytes = novoBloco->PosicaoArquivo(novoBloco);
 		mElementos[pos] = bytes;
 		delete novoBloco;
@@ -148,12 +173,14 @@ void TabelaH::InsereTabela (Dado deus) {
 void TabelaH::LeTabelaArquivo () {
 	ifstream leituraTH("uppsala.txt");
   	int posTH, byte;
-  	while (!leituraTH.eof()) {
-  		leituraTH >> posTH;
-  		leituraTH >> byte;
-  		mElementos[posTH] = byte;
+  	if (leituraTH.is_open()) {
+  		for (int i = 0; i < CAP_TABELA; ++i) {
+  			leituraTH >> posTH;
+  			leituraTH >> byte;
+  			mElementos[posTH] = byte;
+  		}
+  		leituraTH.close();
   	}
-  	leituraTH.close();
 }
 
  void TabelaH::ImprimeTabela () {
@@ -171,7 +198,6 @@ bool TabelaH::PosOcupada (int pos) {
 }
 
 // Fim da implementação da tabela
-
 // Início da implementação dos módulos globais
 
 int FuncaoHash (int i) {
@@ -227,17 +253,6 @@ void InsereDados (TabelaH* tabelaCadastro) {
 	tabelaCadastro->InsereTabela(deus);
 }
 
-void EscreveArquivo (BlocosDados* auxBloco, int posBytes) {
-	ofstream salva("asgard.bin", ios::binary|ios::app);
-	if (salva.eof()) {
-		salva.write(reinterpret_cast<const char*> (&auxBloco), sizeof(BlocosDados));
-	} else {
-		salva.seekp(posBytes, ios::cur);
-		salva.write((const char*) (&auxBloco), sizeof(BlocosDados));
-	}
-	salva.close();
-}
-
 void CarregaBloco (BlocosDados* auxBloco, int posBytes) {
 	ifstream Carregar;
 	Carregar.open("asgard.bin", ios::binary);
@@ -263,22 +278,36 @@ void ConsultaDados () {
 void ImprimeArquivoOrdem () {
 	ifstream leitura;
 	leitura.open("asgard.bin", ios::binary);
-	cout << "OPA !!" << endl;
-	if (leitura){
-		leitura.seekg(0, leitura.end);
-		int tamArq = leitura.tellg();
-		leitura.seekg(0, leitura.beg);
+	if (leitura.is_open()) {
+		/*bool mUso;
+		Dado mBloco[CAP_BLOCO];
+		int mTamBloco;
+		int mCabecalho;
 		
-		int quantBloc = tamArq / sizeof(BlocosDados);
-  		BlocosDados* auxBloco = new BlocosDados;
-  		cout << "OPA 2 !!" << endl;
-  		for(int i = 0; i < quantBloc; i++){
-       		leitura.read((char*)(&auxBloco), sizeof(BlocosDados));
-       		auxBloco->ImprimeBloco();
-  		}
-  		leitura.close();
+		salva.write(reinterpret_cast<const char*>, (&mCabecalho), sizeof(int));
+			salva.write(reinterpret_cast<const char*>, (&mUso), sizeof(bool));
+			salva.write(reinterpret_cast<const char*>, (&mTamBloco), sizeof(int));
+			for (int i = 0; i < CAP_BLOCO; ++i) {
+				salva.write(reinterpret_cast<const char*>, (&mBloco[i]), sizeof(Dado));
+			}*/
+		BlocosDados* impTodo = new BlocosDados;
+		leitura.seekg(0, ios::end);
+		int tamArq = leitura.tellg();
+		leitura.seekg(0, ios::beg);
+		int var = (2*sizeof(int)) + sizeof(bool) + sizeof(Dado);
+		int qntBloco = tamArq/var;
+		for (int i = 0; i < qntBloco; ++i) {		
+			leitura.read(reinterpret_cast<char*> (&impTodo->mCabecalho), sizeof(int));
+			leitura.read(reinterpret_cast<char*> (&impTodo->mUso), sizeof(bool));
+			leitura.read(reinterpret_cast<char*> (&impTodo->mTamBloco), sizeof(int));
+			for (int i = 0; i < CAP_BLOCO; ++i) {
+				leitura.read(reinterpret_cast<const char*> (&impTodo->mBloco[i]), sizeof(Dado));
+			}
+			impTodo->ImprimeBloco();
+		}
 	}
-	cout << "OPA3 !!" << endl;
+	
+  	leitura.close();
 }
 void ImprimeBlocoOrdem () {return;}
 

@@ -28,6 +28,7 @@ typedef Deuses Dado;
 // Classe bloco
 class BlocosDados {
 	friend class TabelaH;
+	friend void ImprimeArquivoOrdem ();
 	public:
 		BlocosDados ();
 		~BlocosDados ();
@@ -35,9 +36,10 @@ class BlocosDados {
 		inline bool EmUso ();
 		bool BlocoCheio ();
 		void ImprimeBloco ();
+		void EscreveArquivo (BlocosDados* novoBloco, int posBytes);
 	protected:
 		bool mUso;
-		Dado mBloco[CAP_TABELA];
+		Dado mBloco[CAP_BLOCO];
 		int mTamBloco;
 		int mCabecalho;
 		int PosicaoArquivo (BlocosDados* novoBloco);
@@ -64,7 +66,6 @@ int ConverteBinario (int decimal);
 void InserirDados (TabelaH* tabelaCadastro);
 void Menu ();
 int ConverteDecimal (int binario);
-void EscreveArquivo (BlocosDados* novoBloco, int posBytes);
 void CarregaBloco (BlocosDados* auxBloco, int posBytes);
 void RemoveDados ();
 void ConsultaDados ();
