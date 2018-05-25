@@ -2,23 +2,19 @@
   --Trabalho de Estrutura de Dados.
   --Sistema de Cadastro em Hashing Extensível
   --Copyright 2018 by Lucas Neves, Andrew e Vinicius.  
-  --Arquivo contém as classes;
+  --Arquivo contém as classes e as declarações dos módulos globais;
 */
 
-#ifndef TRABALHOED_H
-#define TRABALHOED_H
+#ifndef METODOS
+#define METODOS
 
-#include <iostream>
-#include <cmath>
-#include <cstdlib>
-#include <cstring>
-#include <string>
-#include <fstream>
-#define CAP_TAB 16
+// Constantes
 #define CAP_BLOCO 4
+#define CAP_TABELA 16
 
 using namespace std;
 
+// Struct Deus
 struct Deuses {
 	int id;
 	char nome[50];
@@ -26,41 +22,44 @@ struct Deuses {
 	char biografia[200];
 };
 
+// Declaração do tipo Dado
 typedef Deuses Dado;
 
-int FuncaoHash (int i);
-
+// Classe bloco
 class BlocosDados {
 	friend class TabelaH;
 	public:
 		BlocosDados ();
 		~BlocosDados ();
-		void Insere (Dado deus);
+		void InsereBloco (Dado deus);
 		inline bool EmUso ();
 		bool BlocoCheio ();
-		void Imprime ();
+		void ImprimeBloco ();
 	protected:
 		bool mUso;
-		Dado mBloco[CAP_TAB];
+		Dado mBloco[CAP_TABELA];
 		int mTamBloco;
 		int mCabecalho;
 		int PosicaoArquivo (BlocosDados* novoBloco);
 };
 
+// Classe tabela
 class TabelaH {
 	public:
-		TabelaH (int cap = CAP_TAB);
+		TabelaH (int cap = CAP_TABELA);
 		~TabelaH ();
-		void Insere (Dado deus);
+		void InsereTabela (Dado deus);
 		void Remove (int id);
 		bool PosOcupada (int pos);
 		void LeTabelaArquivo ();
-		void Imprime ();
+		void ImprimeTabela ();
 	protected :
 		int* mElementos;
 		int mCapacidade;
 };
 
+// Módulos globais
+int FuncaoHash (int i);
 int ConverteBinario (int decimal);
 void InserirDados (TabelaH* tabelaCadastro);
 void Menu ();
@@ -72,4 +71,4 @@ void ConsultaDados ();
 void ImprimeArquivoOrdem ();
 void ImprimeBlocoOrdem ();
 
-#endif
+#endif // METODOS

@@ -2,7 +2,7 @@
   --Trabalho de Estrutura de Dados.
   --Sistema de Cadastro em Hashing Extensível
   --Copyright 2018 by Lucas Neves, Andrew e Vinicius.  
-  --Arquivo contém as implementações das classes;
+  --Arquivo contém a implementação das classes e dos módulos;
 */
 
 #include <iostream>
@@ -11,21 +11,15 @@
 #include <cstring>
 #include <string>
 #include <fstream>
-#include "trabalhoEd.h"
-#define Cap_TAB 16
+#include "metodos.hpp"
+
+// Constantes
 #define CAP_BLOCO 4
+#define CAP_TABELA 16
 
-/*
-	int id;
-	char nome[50];
-	char dominio[10];
-	char biografia[200]
-*/
+using namespace std;
 
-int FuncaoHash (int i) {
-	int h = i % Cap_TAB;
-	return ConverteBinario(h);
-}
+// Início da implementação do bloco
 
 BlocosDados::BlocosDados () {
 	for (int i = 0; i < CAP_BLOCO; ++i) {
@@ -38,7 +32,18 @@ BlocosDados::BlocosDados () {
 	mUso = false;
 }
 
-void BlocosDados::Insere (Dado deus) {
+BlocosDados::~BlocosDados () {
+	for (int i = 0; i < CAP_BLOCO; ++i) {
+		mBloco[i].id = -1;
+		mBloco[i].nome[50] = ' ';
+		mBloco[i].dominio[10] = ' ';
+		mBloco[i].biografia[200] = ' ';
+	}
+	mTamBloco = 0;
+	mCabecalho = -1;
+}
+
+void BlocosDados::InsereBloco (Dado deus) {
 	if (!EmUso()) {
 		mBloco[mTamBloco] = deus;
 		++mTamBloco;
@@ -56,15 +61,30 @@ void BlocosDados::Insere (Dado deus) {
 	}
 }
 
-BlocosDados::~BlocosDados () {
-	for (int i = 0; i < CAP_BLOCO; ++i) {
-		mBloco[i].id = -1;
-		mBloco[i].nome[50] = ' ';
-		mBloco[i].dominio[10] = ' ';
-		mBloco[i].biografia[200] = ' ';
-	}
-	mTamBloco = 0;
-	mCabecalho = -1;
+int BlocosDados::PosicaoArquivo (BlocosDados* novoBloco) {
+	ifstream Leitura;
+	int pos;
+  	Leitura.open("asgard.bin", ios::binary);
+  	if (Leitura) {
+		Leitura.seekg(0, Leitura.end);
+		int tamArq = Leitura.tellg();
+		Leitura.seekg(0, Leitura.beg);
+		int tamBloc = tamArq / sizeof(BlocosDados);
+		BlocosDados* aux = new BlocosDados;
+		int pos = 0;
+		for (int i = 0; i < tamBloc; i++) {
+  			Leitura.read((char*)(&aux), sizeof(BlocosDados));
+  			if (aux->mCabecalho == novoBloco->mCabecalho) {
+				pos = i*sizeof(BlocosDados);
+				cout << endl << "posição em bytes : " << pos  << endl <<endl;
+			}
+  		}
+  	} if (!Leitura) {
+  		cout << endl << "Essa deus não está cadastrado" << endl;
+  		pos = -1;
+  	}
+  	Leitura.close();
+  	return pos;	
 }
 
 bool BlocosDados::EmUso () {
@@ -75,17 +95,13 @@ bool BlocosDados::BlocoCheio () {
 	return (mTamBloco == 4);
 }
 
-void BlocosDados::Imprime () {
-	cout << "Cabeçalho" << mCabecalho << endl;
-	for (int i = 0; i < mTamBloco; ++i) {
-		cout <<" Id: " << mBloco[i].id << endl;
-		cout <<"Nome : " << mBloco[i].nome << endl;
-		cout <<"Dominio : " << mBloco[i].dominio << endl;
-		cout <<"Biografia: " << endl;
-		cout << mBloco[i].biografia << endl;
-	}
-	cout << "Tamanho: " << mTamBloco << endl;
+void BlocosDados::ImprimeBloco () {
+	return;
 }
+
+// Fim da implementação do bloco
+
+// Início da implementação da tabela
 
 TabelaH::TabelaH (int cap)  {
 	mCapacidade = cap;
@@ -95,12 +111,22 @@ TabelaH::TabelaH (int cap)  {
 	}
 }
 
-void TabelaH::Insere (Dado deus) {
+TabelaH::~TabelaH () {
+	ofstream saida("uppsala.txt");
+	for (int i = 0; i < mCapacidade; ++i) {
+		saida << i  << endl;
+	}
+	saida.close();
+
+	delete[] mElementos;
+}
+
+void TabelaH::InsereTabela (Dado deus) {
 	int pos = ConverteDecimal(FuncaoHash(deus.id));
 	if (PosOcupada(pos)) { // Bloco existe
 		BlocosDados* auxBloco = new BlocosDados;
 		CarregaBloco(auxBloco, mElementos[pos]);
-		auxBloco->Insere(deus);
+		auxBloco->InsereBloco(deus);
 		EscreveArquivo(auxBloco, mElementos[pos]);
 		int bytes = auxBloco->PosicaoArquivo(auxBloco);
 		mElementos[pos] = bytes;
@@ -111,7 +137,7 @@ void TabelaH::Insere (Dado deus) {
 	} else { // Bloco não existe
 		// Crie um novo bloco
 		BlocosDados* novoBloco = new BlocosDados;
-		novoBloco->Insere(deus);
+		novoBloco->InsereBloco(deus);
 		EscreveArquivo(novoBloco, mElementos[pos]);
 		int bytes = novoBloco->PosicaoArquivo(novoBloco);
 		mElementos[pos] = bytes;
@@ -132,21 +158,11 @@ void TabelaH::LeTabelaArquivo () {
   	cout << "Aqui4 !!!" << endl;
 }
 
- void TabelaH::Imprime () {
+ void TabelaH::ImprimeTabela () {
  	for (int i = 0; i < mCapacidade; ++i) {
  		cout << ConverteBinario(i) << " " <<mElementos[i] << endl;
  	}
  }
-
-TabelaH::~TabelaH () {
-	ofstream saida("uppsala.txt");
-	for (int i = 0; i < mCapacidade; ++i) {
-		saida << i  << endl;
-	}
-	saida.close();
-
-	delete[] mElementos;
-}
 
 bool TabelaH::PosOcupada (int pos) {
 	if (mElementos[pos] == -1) {
@@ -154,6 +170,15 @@ bool TabelaH::PosOcupada (int pos) {
 	} else {
 		return true;
 	}
+}
+
+// Fim da implementação da tabela
+
+// Início da implementação dos módulos globais
+
+int FuncaoHash (int i) {
+	int h = i % CAP_TABELA;
+	return ConverteBinario(h);
 }
 
 int ConverteBinario (int decimal) {
@@ -201,7 +226,7 @@ void InsereDados (TabelaH* tabelaCadastro) {
 	cout << "Entre com a biografia do deus:" << endl;
 	cin.getline(deus.biografia, 200);
 	
-	tabelaCadastro->Insere(deus);
+	tabelaCadastro->InsereTabela(deus);
 }
 
 void EscreveArquivo (BlocosDados* auxBloco, int posBytes) {
@@ -213,32 +238,6 @@ void EscreveArquivo (BlocosDados* auxBloco, int posBytes) {
 		salva.write((const char*) (&auxBloco), sizeof(BlocosDados));
 	}
 	salva.close();
-}
-
-int BlocosDados::PosicaoArquivo (BlocosDados* novoBloco) {
-	ifstream Leitura;
-	int pos;
-  	Leitura.open("asgard.bin", ios::binary);
-  	if (Leitura) {
-		Leitura.seekg(0, Leitura.end);
-		int tamArq = Leitura.tellg();
-		Leitura.seekg(0, Leitura.beg);
-		int tamBloc = tamArq / sizeof(BlocosDados);
-		BlocosDados* aux = new BlocosDados;
-		int pos = 0;
-		for (int i = 0; i < tamBloc; i++) {
-  			Leitura.read((char*)(&aux), sizeof(BlocosDados));
-  			if (aux->mCabecalho == novoBloco->mCabecalho) {
-				pos = i*sizeof(BlocosDados);
-				cout << endl << "posição em bytes : " << pos  << endl <<endl;
-			}
-  		}
-  	} if (!Leitura) {
-  		cout << endl << "Essa deus não está cadastrado" << endl;
-  		pos = -1;
-  	}
-  	Leitura.close();
-  	return pos;	
 }
 
 void CarregaBloco (BlocosDados* auxBloco, int posBytes) {
@@ -277,7 +276,7 @@ void ImprimeArquivoOrdem () {
   		cout << "OPA 2 !!" << endl;
   		for(int i = 0; i < quantBloc; i++){
        		leitura.read((char*)(&auxBloco), sizeof(BlocosDados));
-       		auxBloco->Imprime();
+       		auxBloco->ImprimeBloco();
   		}
   		leitura.close();
 	}
@@ -311,3 +310,5 @@ void Menu() {
 	cout << "              |****************************************************|    " << endl;
 	cout << endl;
 }
+
+// Fim da implementação dos módulos globais

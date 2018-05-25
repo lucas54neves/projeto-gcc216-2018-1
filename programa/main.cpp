@@ -18,9 +18,11 @@
 #include <cstring>
 #include <string>
 #include <fstream>
-#include "trabalhoEd.h"
-#define CAP_TAB 16
+#include "metodos.hpp"
+
+// Constantes
 #define CAP_BLOCO 4
+#define CAP_TABELA 16
 
 using namespace std;
 
@@ -29,11 +31,11 @@ int main() {
 	int opcao;
 	int i = 0;
 	cout << "Aqui1 !!!" << endl;
-	TabelaH* tabelaCadastro =  new TabelaH(16);
+	TabelaH* tabelaCadastro =  new TabelaH(CAP_TABELA);
 	cout << "Aqui2 !!!" << endl;
 	//tabelaCadastro->LeTabelaArquivo();
 	cout << "Aqui5 !!!" << endl;
-	tabelaCadastro->Imprime();
+	tabelaCadastro->ImprimeTabela();
 	do {
 		Menu();
 		cin >> opcao;
@@ -61,7 +63,7 @@ int main() {
 				cout << "Entre com a biografia do deus:" << endl;
 				cin.getline(deus.biografia, 200);
 				
-				tabelaCadastro->Insere(deus);
+				tabelaCadastro->InsereTabela(deus);
 
 				break;
 			}
