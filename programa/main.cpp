@@ -72,7 +72,7 @@ int main() {
 			case 3:
 			{
 				// Subprograma para consultar um deus no arquivo.
-				ConsultaDados();
+				ConsultaDados(tabelaCadastro);
 				
 				break;
 			}
@@ -80,13 +80,13 @@ int main() {
 			{	//Pronto!
 				// Subprograma para imprimir todo o conteúdo do arquivo, na ordem de armazenamento.
 				ImprimeArquivoOrdem();
-				
+			
 				break;
 			}
 			case 5:
 			{
 				// Subprograma para imprimir todo o bloco com os deuses ordenados.
-				ImprimeBlocoOrdem();
+				ImprimeBlocoOrdem(tabelaCadastro);
 				
 				break;
 			}

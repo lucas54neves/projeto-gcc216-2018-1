@@ -35,6 +35,7 @@ class BlocosDados {
 		inline bool EmUso ();
 		bool BlocoCheio ();
 		void ImprimeBloco ();
+		void ImpressaoConsulta (int id);
 	protected:
 		bool mUso;
 		Dado mBloco[CAP_BLOCO];
@@ -53,6 +54,7 @@ class TabelaH {
 		bool PosOcupada (int pos);
 		void LeTabelaArquivo ();
 		void ImprimeTabela ();
+		inline int PosicaoBytes (int h);
 	protected :
 		int* mElementos;
 		int mCapacidade;
@@ -68,8 +70,8 @@ void EscreveArquivoNovo (BlocosDados* novoBloco);
 void EscreveArquivoVelho (BlocosDados* auxBloco, int posBytes);
 void CarregaBloco (BlocosDados* auxBloco, int posBytes);
 void RemoveDados ();
-void ConsultaDados ();
+void ConsultaDados (TabelaH* tabelaCadastro);
 void ImprimeArquivoOrdem ();
-void ImprimeBlocoOrdem ();
+void ImprimeBlocoOrdem (TabelaH* tabelaCadastro);
 
 #endif // METODOS

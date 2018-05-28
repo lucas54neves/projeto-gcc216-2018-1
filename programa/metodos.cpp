@@ -109,6 +109,41 @@ void BlocosDados::ImprimeBloco () {
 	cout << endl;
 }
 
+void BlocosDados::ImpressaoConsulta (int id) {
+	bool existe = false;
+	for (int i = 0; i < mTamBloco; ++i) {
+		if (mBloco[i].id == id) {
+			cout << "======================(Deus)======================" << endl;
+			cout << "ID: " << mBloco[i].id << endl;
+			cout << "Nome:" << mBloco[i].nome << endl;
+			cout << "Dominio: " << mBloco[i].dominio << endl;
+			cout << "Biografia: " << mBloco[i].biografia << endl;
+			cout << "===================================================" << endl;
+			existe = true;
+		}
+	}
+	if (!existe)
+		cout << "Esse id não está na cadastrado " << endl;
+}
+
+int BlocosDados::PosDeus (int id) {
+	/*bool existe = false;
+	for (int i = 0; i < mTamBloco; ++i) {
+		if (mBloco[i].id == id) {
+			cout << "======================(Deus)======================" << endl;
+			cout << "ID: " << mBloco[i].id << endl;
+			cout << "Nome:" << mBloco[i].nome << endl;
+			cout << "Dominio: " << mBloco[i].dominio << endl;
+			cout << "Biografia: " << mBloco[i].biografia << endl;
+			cout << "===================================================" << endl;
+			existe = true;
+		}
+	}
+	if (!existe)
+		cout << "Esse id não está na cadastrado " << endl;
+		*/	
+}
+
 // Fim da implementação do bloco
 
 // Início da implementação da tabela
@@ -182,6 +217,10 @@ bool TabelaH::PosOcupada (int pos) {
 	} else {
 		return true;
 	}
+}
+
+int TabelaH::PosicaoBytes (int h) {
+	return mElementos[h];
 }
 
 // Fim da implementação da tabela
@@ -270,13 +309,29 @@ void CarregaBloco (BlocosDados* auxBloco, int posBytes) {
 }
 
 void RemoveDados () {
-
+	int id, numH;
+	cout << "Insira um ID: " << endl;
+	cin >> id;
+	numH = ConverteDecimal(FuncaoHash(id));
+	if (tabelaCadastro->PosOcupada(numH)) {
+		BlocosDados* blocRem = new BlocosDados;
+		CarregaBloco(blocRem, tabelaCadastro->PosicaoBytes(numH));
+		blocRem->PosDeus(id);
+	}
 	return;
 }
 
-void ConsultaDados () {
-
-	return;
+void ConsultaDados (TabelaH* tabelaCadastro) {
+	int id, numH;
+	cout << "Insira um ID: " << endl;
+	cin >> id;
+	numH = ConverteDecimal(FuncaoHash(id));
+	if (tabelaCadastro->PosOcupada(numH)) {
+		BlocosDados* blocCons = new BlocosDados;
+		CarregaBloco(blocCons, tabelaCadastro->PosicaoBytes(numH));
+		blocCons->ImpressaoConsulta(id);
+		delete blocCons;
+	}
 }
 
 void ImprimeArquivoOrdem () {
@@ -297,32 +352,51 @@ void ImprimeArquivoOrdem () {
 	
   	leitura.close();
 }
-void ImprimeBlocoOrdem () {return;}
+void ImprimeBlocoOrdem (TabelaH* tabelaCadastro) {
+	int numBin;
+	tabelaCadastro->ImprimeTabela();
+	cout << endl << "Insira uma posicao em número binário correspondente a Tabela: " << endl;
+	cin >> numBin;
+	if (tabelaCadastro->PosicaoBytes(ConverteDecimal(numBin)) == -1) {
+		cout << "Posição Desocupada ! " << endl << endl;
+		char opcao;
+		cout << "Deseja sair da posição [y/n] " << endl;
+		cin >> opcao;
+		if (opcao == 'n') {
+			ImprimeBlocoOrdem(tabelaCadastro);
+			cout << endl;
+		} else if (opcao != 'n') {
+			void Menu();
+		}
+	} else {
+		BlocosDados* blocOrd = new BlocosDados;
+		CarregaBloco(blocOrd, tabelaCadastro->PosicaoBytes(ConverteDecimal(numBin)));
+		blocOrd->ImprimeBloco();
+	}
+}
 
 void Menu() {
 	cout << endl;
-	cout << "              |*********************[MENU]*************************|    " << endl;
+	cout << "              |&&&&&&&&&&&&&&&&&&&&&[MENU]&&&&&&&&&&&&&&&&&&&&&&&&&|    " << endl;
 	cout << "              =                                                    =    " << endl;
 	cout << "             | |        Entre com a opção desejada:               | |   " << endl;
 	cout << "              =                                                    =    " << endl;
 	cout << "              |                                                    |    " << endl;
 	cout << "              | (1) - para inserir um novo deus no arquivo:        |    " << endl;
 	cout << "              |                                                    |    " << endl;
-	cout << "              |                                                    |    " << endl;
 	cout << "              | (2) - para remover um deus do arquivo:             |    " << endl;
-	cout << "              |                                                    |    " << endl;
 	cout << "              |                                                    |    " << endl;
 	cout << "              | (3) - para consultar um deus no arquivo:           |    " << endl;
 	cout << "              |                                                    |    " << endl;
-	cout << "              |                                                    |    " << endl;
 	cout << "              | (4) - para imprimir todos registros:               |    " << endl;
 	cout << "              |                                                    |    " << endl;
+	cout << "              | (5) - para imprimir Bloco:                         |    " << endl;
 	cout << "              |                                                    |    " << endl;
 	cout << "              | (0) - para sair:                                   |    " << endl;
 	cout << "              =                                                    =    " << endl;
 	cout << "             | |                                                  | |   " << endl;
 	cout << "              =                                                    =    " << endl;
-	cout << "              |****************************************************|    " << endl;
+	cout << "              |&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&|    " << endl;
 	cout << endl;
 }
 
