@@ -1,16 +1,16 @@
-all: executar
+all: compilar
 
-executar: main.o metodos.o
-	g++ -o executar main.o metodos.o
+compilar: main.o metodos.o
+	@g++ -o programa main.o metodos.o
 
 main.o: main.cpp metodos.hpp
-	g++ -o main.o main.cpp -c -W -Wall -ansi -pedantic
+	@g++ -o main.o main.cpp -c -W -Wall -ansi -pedantic
 
 metodos.o: metodos.cpp metodos.hpp
-	g++ -o metodos.o metodos.cpp -c -W -Wall -ansi -pedantic
+	@g++ -o metodos.o metodos.cpp -c -W -Wall -ansi -pedantic
 
-clean:
-	rm -rf *.o
+limpar:
+	@rm -rf *.o ~programa
 
 iniciar:
-	./executar
+	@./programa

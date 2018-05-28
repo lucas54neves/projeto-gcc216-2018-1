@@ -63,27 +63,26 @@ void BlocosDados::InsereBloco (Dado deus) {
 
 int BlocosDados::PosicaoArquivo (BlocosDados* novoBloco) {
 	ifstream Leitura;
-	int pos;
+	int pos = 0;
   	Leitura.open("asgard.bin", ios::binary);
   	if (Leitura) {
 		Leitura.seekg(0, Leitura.end);
 		int tamArq = Leitura.tellg();
 		Leitura.seekg(0, Leitura.beg);
-		int tamBloc = tamArq / sizeof(BlocosDados);
+		int qntBloc = tamArq / sizeof(BlocosDados);
 		BlocosDados* aux = new BlocosDados;
-		int pos = 0;
-		for (int i = 0; i < tamBloc; i++) {
-  			Leitura.read((char*)(&aux), sizeof(BlocosDados));
+		for (int i = 0; i < qntBloc; ++i) {
+  			Leitura.read((char*)(aux), sizeof(BlocosDados));
   			if (aux->mCabecalho == novoBloco->mCabecalho) {
 				pos = i*sizeof(BlocosDados);
-				cout << endl << "posição em bytes : " << pos  << endl <<endl;
 			}
   		}
-  	} if (!Leitura) {
+  	} else if (!Leitura) {
   		cout << endl << "Essa deus não está cadastrado" << endl;
   		pos = -1;
   	}
   	Leitura.close();
+  	cout << "posBytes: " << pos << endl; 
   	return pos;	
 }
 
@@ -96,32 +95,18 @@ bool BlocosDados::BlocoCheio () {
 }
 
 void BlocosDados::ImprimeBloco () {
-	cout << "-----[Bloco]-----" << endl;
+	cout << ">>>>>>>>>>>>>>>>>>>>>>[BLOCO]<<<<<<<<<<<<<<<<<<<<<<" << endl;
 	cout << "Tamanho: " << mTamBloco << endl;
 	cout << "Cabeçalho: " << mCabecalho << endl;
 	for (int i = 0; i < mTamBloco; ++i) {
-		cout << "Deus " << i << ":" << endl;
+		cout << "=====================(Deus"<< " " << i <<")======================" << endl;
 		cout << "ID: " << mBloco[i].id << endl;
 		cout << "Nome:" << mBloco[i].nome << endl;
 		cout << "Dominio: " << mBloco[i].dominio << endl;
 		cout << "Biografia: " << mBloco[i].biografia << endl;
-		cout << "--------------------------------------------" << endl;
+		cout << "===================================================" << endl;
 	}
-}
-
-void BlocosDados::EscreveArquivo (BlocosDados* auxBloco, int posBytes) {
-	ofstream salva("asgard.bin", ios::binary|ios::app);
-	if (mTamBloco == 1) {
-		if (salva.is_open()) {
-			salva.write(reinterpret_cast<const char*> (&mCabecalho), sizeof(int));
-			salva.write(reinterpret_cast<const char*> (&mUso), sizeof(bool));
-			salva.write(reinterpret_cast<const char*> (&mTamBloco), sizeof(int));
-			for (int i = 0; i < CAP_BLOCO; ++i) {
-				salva.write(reinterpret_cast<const char*> (&mBloco[i]), sizeof(Dado));
-			}
-		}	
-	}
-	salva.close();
+	cout << endl;
 }
 
 // Fim da implementação do bloco
@@ -139,6 +124,8 @@ TabelaH::TabelaH (int cap)  {
 TabelaH::~TabelaH () {
 	ofstream saida("uppsala.txt");
 	for (int i = 0; i < mCapacidade; ++i) {
+		cout << "posTH: " << ConverteBinario(i) << "byte: " << mElementos[i] << endl;
+  		cout <<  endl;
 		saida << ConverteBinario(i) << "\t" << mElementos[i] << endl;
 	}
 	saida.close();
@@ -152,9 +139,7 @@ void TabelaH::InsereTabela (Dado deus) {
 		BlocosDados* auxBloco = new BlocosDados;
 		CarregaBloco(auxBloco, mElementos[pos]);
 		auxBloco->InsereBloco(deus);
-		auxBloco->EscreveArquivo(auxBloco, mElementos[pos]);
-		int bytes = auxBloco->PosicaoArquivo(auxBloco);
-		mElementos[pos] = bytes;
+		EscreveArquivoVelho(auxBloco, mElementos[pos]);
 		delete auxBloco;
 		// Posição no arquivo = mElementos[pos]
 		// Puxa no arquivo binário o bloco
@@ -163,7 +148,7 @@ void TabelaH::InsereTabela (Dado deus) {
 		// Crie um novo bloco
 		BlocosDados* novoBloco = new BlocosDados;
 		novoBloco->InsereBloco(deus);
-		novoBloco->EscreveArquivo(novoBloco, mElementos[pos]);
+		EscreveArquivoNovo(novoBloco);
 		int bytes = novoBloco->PosicaoArquivo(novoBloco);
 		mElementos[pos] = bytes;
 		delete novoBloco;
@@ -177,9 +162,11 @@ void TabelaH::LeTabelaArquivo () {
   		for (int i = 0; i < CAP_TABELA; ++i) {
   			leituraTH >> posTH;
   			leituraTH >> byte;
-  			mElementos[posTH] = byte;
+  			mElementos[ConverteDecimal(posTH)] = byte;
   		}
   		leituraTH.close();
+  		cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+  		ImprimeTabela();
   	}
 }
 
@@ -253,12 +240,29 @@ void InsereDados (TabelaH* tabelaCadastro) {
 	tabelaCadastro->InsereTabela(deus);
 }
 
+void EscreveArquivoNovo (BlocosDados* auxBloco) {
+	ofstream salva("asgard.bin", ios::binary|ios::app);
+	if (salva.is_open()) {
+		salva.write(reinterpret_cast<const char*> (auxBloco), sizeof(BlocosDados));
+	}	
+	salva.close();
+}
+
+void EscreveArquivoVelho (BlocosDados* auxBloco, int posBytes) {
+	fstream salva("asgard.bin", ios::binary| ios::out| ios::in);
+	if (salva.is_open()) {
+		salva.seekp(posBytes, ios::cur);
+		salva.write(reinterpret_cast<const char*> (auxBloco), sizeof(BlocosDados));
+	}	
+	salva.close();
+}
+
 void CarregaBloco (BlocosDados* auxBloco, int posBytes) {
 	ifstream Carregar;
 	Carregar.open("asgard.bin", ios::binary);
-	if (Carregar) {
+	if (Carregar.is_open()) {
 		Carregar.seekg(posBytes, ios::cur);
-		Carregar.read((char*)(&auxBloco), sizeof(BlocosDados));
+		Carregar.read((char*)(auxBloco), sizeof(BlocosDados));
 	} else {
 		cout << endl <<"Erro na leitura do arquivo ou arquivo inesistente !" << endl << endl;
 	}
@@ -279,30 +283,14 @@ void ImprimeArquivoOrdem () {
 	ifstream leitura;
 	leitura.open("asgard.bin", ios::binary);
 	if (leitura.is_open()) {
-		/*bool mUso;
-		Dado mBloco[CAP_BLOCO];
-		int mTamBloco;
-		int mCabecalho;
-		
-		salva.write(reinterpret_cast<const char*>, (&mCabecalho), sizeof(int));
-			salva.write(reinterpret_cast<const char*>, (&mUso), sizeof(bool));
-			salva.write(reinterpret_cast<const char*>, (&mTamBloco), sizeof(int));
-			for (int i = 0; i < CAP_BLOCO; ++i) {
-				salva.write(reinterpret_cast<const char*>, (&mBloco[i]), sizeof(Dado));
-			}*/
 		BlocosDados* impTodo = new BlocosDados;
 		leitura.seekg(0, ios::end);
 		int tamArq = leitura.tellg();
 		leitura.seekg(0, ios::beg);
-		int var = (2*sizeof(int)) + sizeof(bool) + sizeof(Dado);
+		int var = sizeof(BlocosDados);
 		int qntBloco = tamArq/var;
 		for (int i = 0; i < qntBloco; ++i) {		
-			leitura.read(reinterpret_cast<char*> (&impTodo->mCabecalho), sizeof(int));
-			leitura.read(reinterpret_cast<char*> (&impTodo->mUso), sizeof(bool));
-			leitura.read(reinterpret_cast<char*> (&impTodo->mTamBloco), sizeof(int));
-			for (int i = 0; i < CAP_BLOCO; ++i) {
-				leitura.read(reinterpret_cast<const char*> (&impTodo->mBloco[i]), sizeof(Dado));
-			}
+			leitura.read(reinterpret_cast<char*> (impTodo), sizeof(BlocosDados));
 			impTodo->ImprimeBloco();
 		}
 	}
