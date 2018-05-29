@@ -28,6 +28,7 @@ typedef Deuses Dado;
 // Classe bloco
 class BlocosDados {
 	friend class TabelaH;
+	friend void InsertionSort (Dado* deus, int tam);
 	public:
 		BlocosDados ();
 		~BlocosDados ();
@@ -38,6 +39,7 @@ class BlocosDados {
 		void ImpressaoConsulta (int id);
 		int PosDeus (int id);
 		void RemoveDeus (int posId);
+		bool ProcuraIdRepetido (int id);
 	protected:
 		bool mUso;
 		Dado mBloco[CAP_BLOCO];
@@ -65,7 +67,7 @@ class TabelaH {
 // Módulos globais
 int FuncaoHash (int i);
 int ConverteBinario (int decimal);
-void InserirDados (TabelaH* tabelaCadastro);
+void InsereDados (TabelaH* tabelaCadastro);
 void Menu ();
 int ConverteDecimal (int binario);
 void EscreveArquivoNovo (BlocosDados* novoBloco);
@@ -75,5 +77,6 @@ void RemoveDados (TabelaH* tabelaCadastro);
 void ConsultaDados (TabelaH* tabelaCadastro);
 void ImprimeArquivoOrdem ();
 void ImprimeBlocoOrdem (TabelaH* tabelaCadastro);
+void InsertionSort (Dado* deus, int tam);
 
 #endif // METODOS

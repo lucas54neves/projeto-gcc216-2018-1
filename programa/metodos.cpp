@@ -100,14 +100,21 @@ void BlocosDados::ImprimeBloco () {
 		cout << "Tamanho: " << mTamBloco << endl;
 		cout << "Cabeçalho: " << mCabecalho << endl;
 		cout << "Uso: " << mUso << endl;
+		Dado* deus = new Dado[mTamBloco];
+		deus = mBloco;
+		InsertionSort(deus, mTamBloco);
 		for (int i = 0; i < mTamBloco; ++i) {
 			cout << "=====================(Deus"<< " " << i <<")======================" << endl;
-			cout << "ID: " << mBloco[i].id << endl;
-			cout << "Nome:" << mBloco[i].nome << endl;
-			cout << "Dominio: " << mBloco[i].dominio << endl;
-			cout << "Biografia: " << mBloco[i].biografia << endl;
+			cout << "ID: " << deus[i].id << endl;
+			cout << "Nome:" << deus[i].nome << endl;
+			cout << "Dominio: " << deus[i].dominio << endl;
+			cout << "Biografia: " << deus[i].biografia << endl;
 			cout << "===================================================" << endl;
 		}
+		//Isto é necessário pois como deus é um ponteiro se não fosse apontado para NULL antes de deletado
+		//estará apagando o endero dos blocos.
+		deus = NULL;
+		delete[] deus;
 	}
 	cout << endl << endl;
 }
@@ -158,6 +165,16 @@ void BlocosDados::RemoveDeus (int posId) {
 		mUso = false;
 	}
 	--mTamBloco; 
+}
+
+bool BlocosDados::ProcuraIdRepetido (int id) {
+	bool existe = false;
+	for (int i = 0; i < mTamBloco; ++i) {
+		if (mBloco[i].id == id) {
+			existe = true;
+		}
+	}
+	return existe;
 }
 
 /*////////////////////////////////////////// Fim da implementação do bloco/////////////////////////////*/
@@ -291,7 +308,28 @@ void InsereDados (TabelaH* tabelaCadastro) {
 	cout << "Entre com a biografia do deus:" << endl;
 	cin.getline(deus.biografia, 200);
 	
-	tabelaCadastro->InsereTabela(deus);
+	cout << "Aqui !!! " << endl;
+	int posVal = tabelaCadastro->PosicaoBytes(ConverteDecimal(FuncaoHash(deus.id)));
+	if (posVal != -1) {
+		BlocosDados* blocIns = new BlocosDados;
+		CarregaBloco(blocIns, posVal);
+		bool existeRep = blocIns->ProcuraIdRepetido(deus.id);
+		if (existeRep) {
+			cout << "Id repetido !" << endl;
+			char opcao;
+			cout << "Deseja tentar outro id [y/n] " << endl;
+			cin >> opcao;
+			if (opcao == 'y') {
+				InsereDados(tabelaCadastro);
+			} else {
+				system("clear");
+				Menu();
+				return;
+			}
+		} else {
+			tabelaCadastro->InsereTabela(deus);
+		}
+	}
 }
 
 void EscreveArquivoNovo (BlocosDados* auxBloco) {
@@ -341,7 +379,9 @@ void RemoveDados (TabelaH* tabelaCadastro) {
 			if (opcao == 'n') {
 				RemoveDados(tabelaCadastro);
 			} else {
+				system("clear");
 				Menu();
+				return;
 			}
 		} else {
 			blocRem->RemoveDeus(posId);
@@ -357,7 +397,9 @@ void RemoveDados (TabelaH* tabelaCadastro) {
 		if (opcao == 'n') {
 			RemoveDados(tabelaCadastro);
 		} else {
+			system("clear");
 			Menu();
+			return;
 		}
 	}
 }
@@ -407,12 +449,38 @@ void ImprimeBlocoOrdem (TabelaH* tabelaCadastro) {
 			ImprimeBlocoOrdem(tabelaCadastro);
 			cout << endl;
 		} else if (opcao != 'n') {
-			void Menu();
+			system("clear");
+			Menu();
+			return;
 		}
 	} else {
 		BlocosDados* blocOrd = new BlocosDados;
 		CarregaBloco(blocOrd, tabelaCadastro->PosicaoBytes(ConverteDecimal(numBin)));
 		blocOrd->ImprimeBloco();
+	}
+}
+
+void InsertionSort(Dado* deus, int tam){
+	int i, j, aux;
+	char charAux1[50], charAux2[50], charAux3[200]; 
+	for (i = 1; i < tam; i++){
+		aux = deus[i].id;
+		strcpy(charAux1, deus[i].nome);
+		strcpy(charAux2, deus[i].dominio);
+		strcpy(charAux3, deus[i].biografia);
+		j = i - 1;
+		while ((j >= 0) and (aux < signed(deus[j].id))) {
+			deus[j+1].id = deus[j].id;
+			strcpy(deus[j+1].nome, deus[j].nome);
+			strcpy(deus[j+1].dominio, deus[j].dominio);
+			strcpy(deus[j+1].biografia, deus[j].biografia);
+
+			j--;
+		}
+	deus[j+1].id = aux;
+	strcpy(deus[j+1].nome, charAux1);
+	strcpy(deus[j+1].dominio, charAux2);
+	strcpy(deus[j+1].biografia, charAux3);
 	}
 }
 
