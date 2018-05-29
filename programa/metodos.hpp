@@ -36,6 +36,8 @@ class BlocosDados {
 		bool BlocoCheio ();
 		void ImprimeBloco ();
 		void ImpressaoConsulta (int id);
+		int PosDeus (int id);
+		void RemoveDeus (int posId);
 	protected:
 		bool mUso;
 		Dado mBloco[CAP_BLOCO];
@@ -69,7 +71,7 @@ int ConverteDecimal (int binario);
 void EscreveArquivoNovo (BlocosDados* novoBloco);
 void EscreveArquivoVelho (BlocosDados* auxBloco, int posBytes);
 void CarregaBloco (BlocosDados* auxBloco, int posBytes);
-void RemoveDados ();
+void RemoveDados (TabelaH* tabelaCadastro);
 void ConsultaDados (TabelaH* tabelaCadastro);
 void ImprimeArquivoOrdem ();
 void ImprimeBlocoOrdem (TabelaH* tabelaCadastro);

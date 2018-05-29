@@ -27,8 +27,9 @@
 using namespace std;
 
 int main() {
-	cout << "Sistema de cadastro em Hashing Extensível" << endl;
+	cout << "Sistema de cadastro: " << endl;
 	int opcao;
+	char questao;
 	TabelaH* tabelaCadastro =  new TabelaH;
 	tabelaCadastro->LeTabelaArquivo();
 	do {
@@ -59,27 +60,51 @@ int main() {
 				cin.getline(deus.biografia, 200);
 				
 				tabelaCadastro->InsereTabela(deus);
+				cout << endl << "Deseja continuar no programa ? [y/n] " << endl;
+				cin >> questao;
+				if (questao == 'n') {
+					opcao = 0; 
+				}
+				system("clear");
 
 				break;
 			}
 			case 2:
 			{
 				// Subprograma para remover um objeto do arquivo.
-				RemoveDados();
-				
+				RemoveDados(tabelaCadastro);
+				cout << endl << "Deseja continuar no programa ? [y/n] " << endl;
+				cin >> questao;
+				if (questao == 'n') {
+					opcao = 0; 
+				}
+				system("clear");
+
 				break;
 			}
 			case 3:
 			{
 				// Subprograma para consultar um deus no arquivo.
 				ConsultaDados(tabelaCadastro);
-				
+				cout << endl << "Deseja continuar no programa ? [y/n] " << endl;
+				cin >> questao;
+				if (questao == 'n') {
+					opcao = 0; 
+				}
+				system("clear");
+
 				break;
 			}
 			case 4:
 			{	//Pronto!
 				// Subprograma para imprimir todo o conteúdo do arquivo, na ordem de armazenamento.
 				ImprimeArquivoOrdem();
+				cout << endl << "Deseja continuar no programa ? [y/n] " << endl;
+				cin >> questao;
+				if (questao == 'n') {
+					opcao = 0; 
+				}
+				system("clear");
 			
 				break;
 			}
@@ -87,11 +112,18 @@ int main() {
 			{
 				// Subprograma para imprimir todo o bloco com os deuses ordenados.
 				ImprimeBlocoOrdem(tabelaCadastro);
+				cout << endl << "Deseja continuar no programa ? [y/n] " << endl;
+				cin >> questao;
+				if (questao == 'n') {
+					opcao = 0; 
+				}
+				system("clear");
 				
 				break;
 			}
 			default:
 			{
+				system("clear");
 				cout << "Opção não cadastrada! Tente novamente." << endl;
 				
 				break;

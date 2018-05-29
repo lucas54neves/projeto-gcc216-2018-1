@@ -19,7 +19,7 @@
 
 using namespace std;
 
-// Início da implementação do bloco
+/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ Início da implementação do bloco\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 BlocosDados::BlocosDados () {
 	for (int i = 0; i < CAP_BLOCO; ++i) {
@@ -61,6 +61,7 @@ void BlocosDados::InsereBloco (Dado deus) {
 	}
 }
 
+//Ḿétodo para encontrar a posição do bloco em bytes do arquivo
 int BlocosDados::PosicaoArquivo (BlocosDados* novoBloco) {
 	ifstream Leitura;
 	int pos = 0;
@@ -82,7 +83,6 @@ int BlocosDados::PosicaoArquivo (BlocosDados* novoBloco) {
   		pos = -1;
   	}
   	Leitura.close();
-  	cout << "posBytes: " << pos << endl; 
   	return pos;	
 }
 
@@ -95,18 +95,21 @@ bool BlocosDados::BlocoCheio () {
 }
 
 void BlocosDados::ImprimeBloco () {
-	cout << ">>>>>>>>>>>>>>>>>>>>>>[BLOCO]<<<<<<<<<<<<<<<<<<<<<<" << endl;
-	cout << "Tamanho: " << mTamBloco << endl;
-	cout << "Cabeçalho: " << mCabecalho << endl;
-	for (int i = 0; i < mTamBloco; ++i) {
-		cout << "=====================(Deus"<< " " << i <<")======================" << endl;
-		cout << "ID: " << mBloco[i].id << endl;
-		cout << "Nome:" << mBloco[i].nome << endl;
-		cout << "Dominio: " << mBloco[i].dominio << endl;
-		cout << "Biografia: " << mBloco[i].biografia << endl;
-		cout << "===================================================" << endl;
+	if (mUso) {
+		cout << ">>>>>>>>>>>>>>>>>>>>>>[BLOCO]<<<<<<<<<<<<<<<<<<<<<<" << endl;
+		cout << "Tamanho: " << mTamBloco << endl;
+		cout << "Cabeçalho: " << mCabecalho << endl;
+		cout << "Uso: " << mUso << endl;
+		for (int i = 0; i < mTamBloco; ++i) {
+			cout << "=====================(Deus"<< " " << i <<")======================" << endl;
+			cout << "ID: " << mBloco[i].id << endl;
+			cout << "Nome:" << mBloco[i].nome << endl;
+			cout << "Dominio: " << mBloco[i].dominio << endl;
+			cout << "Biografia: " << mBloco[i].biografia << endl;
+			cout << "===================================================" << endl;
+		}
 	}
-	cout << endl;
+	cout << endl << endl;
 }
 
 void BlocosDados::ImpressaoConsulta (int id) {
@@ -126,27 +129,40 @@ void BlocosDados::ImpressaoConsulta (int id) {
 		cout << "Esse id não está na cadastrado " << endl;
 }
 
+//Método para encontrar a posição no vetor de struct no bloco
 int BlocosDados::PosDeus (int id) {
-	/*bool existe = false;
+	bool existe = false;
+	int posD = -1;
 	for (int i = 0; i < mTamBloco; ++i) {
 		if (mBloco[i].id == id) {
-			cout << "======================(Deus)======================" << endl;
-			cout << "ID: " << mBloco[i].id << endl;
-			cout << "Nome:" << mBloco[i].nome << endl;
-			cout << "Dominio: " << mBloco[i].dominio << endl;
-			cout << "Biografia: " << mBloco[i].biografia << endl;
-			cout << "===================================================" << endl;
+			posD = i;
 			existe = true;
 		}
 	}
-	if (!existe)
-		cout << "Esse id não está na cadastrado " << endl;
-		*/	
+	if (!existe) {
+		return posD;
+	}
+	return posD;
 }
 
-// Fim da implementação do bloco
+//Método para remover deus na posição do vetor e também atualizar posições.
+void BlocosDados::RemoveDeus (int posId) {
+	mBloco[posId].id = -1;
+	if (posId < mTamBloco -1) {
+		for (int i = posId; i < mTamBloco-1; ++i) {
+			mBloco[i] = mBloco[i+1];  
+		}
+	cout << "mTamBloco: " << mTamBloco << endl; 
+	} else if (mTamBloco == 1) {
+		cout << "mTamBloco: " << mTamBloco << endl; 
+		mUso = false;
+	}
+	--mTamBloco; 
+}
 
-// Início da implementação da tabela
+/*////////////////////////////////////////// Fim da implementação do bloco/////////////////////////////*/
+
+/*/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ Início da implementação da tabela\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 TabelaH::TabelaH (int cap)  {
 	mCapacidade = cap;
@@ -159,8 +175,6 @@ TabelaH::TabelaH (int cap)  {
 TabelaH::~TabelaH () {
 	ofstream saida("uppsala.txt");
 	for (int i = 0; i < mCapacidade; ++i) {
-		cout << "posTH: " << ConverteBinario(i) << "byte: " << mElementos[i] << endl;
-  		cout <<  endl;
 		saida << ConverteBinario(i) << "\t" << mElementos[i] << endl;
 	}
 	saida.close();
@@ -207,7 +221,7 @@ void TabelaH::LeTabelaArquivo () {
 
  void TabelaH::ImprimeTabela () {
  	for (int i = 0; i < mCapacidade; ++i) {
- 		cout << ConverteBinario(i) << " - " << mElementos[i] << endl;
+ 		cout << ConverteBinario(i) << "\t" << mElementos[i] << endl;
  	}
  }
 
@@ -223,8 +237,9 @@ int TabelaH::PosicaoBytes (int h) {
 	return mElementos[h];
 }
 
-// Fim da implementação da tabela
-// Início da implementação dos módulos globais
+/*////////////////////////////////// Fim da implementação da tabela//////////////////////////////////*/
+
+/*/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ Início da implementação dos módulos globais\\\\\\\\\\\\\\\\\\\\*/
 
 int FuncaoHash (int i) {
 	int h = i % CAP_TABELA;
@@ -308,17 +323,43 @@ void CarregaBloco (BlocosDados* auxBloco, int posBytes) {
 	Carregar.close();
 }
 
-void RemoveDados () {
+void RemoveDados (TabelaH* tabelaCadastro) {
 	int id, numH;
 	cout << "Insira um ID: " << endl;
 	cin >> id;
 	numH = ConverteDecimal(FuncaoHash(id));
 	if (tabelaCadastro->PosOcupada(numH)) {
 		BlocosDados* blocRem = new BlocosDados;
-		CarregaBloco(blocRem, tabelaCadastro->PosicaoBytes(numH));
-		blocRem->PosDeus(id);
+		int posBytes = tabelaCadastro->PosicaoBytes(numH);
+		CarregaBloco(blocRem, posBytes);
+		int posId = blocRem->PosDeus(id);
+ 		if (posId == -1) {
+			cout << "Não exite deus com esse id não está na cadastrado " << endl;
+			char opcao;
+			cout << "Deseja sair da posição [y/n] " << endl;
+			cin >> opcao;
+			if (opcao == 'n') {
+				RemoveDados(tabelaCadastro);
+			} else {
+				Menu();
+			}
+		} else {
+			blocRem->RemoveDeus(posId);
+			EscreveArquivoVelho(blocRem, posBytes);
+			cout << "deus Removido com sucesso" << endl;
+		}
+		delete blocRem;
+	} else  {
+		cout << "Não exite deus com esse id não está na cadastrado " << endl;
+		char opcao;
+		cout << "Deseja sair da posição [y/n] " << endl;
+		cin >> opcao;
+		if (opcao == 'n') {
+			RemoveDados(tabelaCadastro);
+		} else {
+			Menu();
+		}
 	}
-	return;
 }
 
 void ConsultaDados (TabelaH* tabelaCadastro) {
@@ -400,4 +441,4 @@ void Menu() {
 	cout << endl;
 }
 
-// Fim da implementação dos módulos globais
+/*///////////////////////////Fim da implementação dos módulos globais///////////////////////*/
