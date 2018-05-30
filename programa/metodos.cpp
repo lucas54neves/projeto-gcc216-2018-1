@@ -308,7 +308,6 @@ void InsereDados (TabelaH* tabelaCadastro) {
 	cout << "Entre com a biografia do deus:" << endl;
 	cin.getline(deus.biografia, 200);
 	
-	cout << "Aqui !!! " << endl;
 	int posVal = tabelaCadastro->PosicaoBytes(ConverteDecimal(FuncaoHash(deus.id)));
 	if (posVal != -1) {
 		BlocosDados* blocIns = new BlocosDados;
@@ -329,6 +328,8 @@ void InsereDados (TabelaH* tabelaCadastro) {
 		} else {
 			tabelaCadastro->InsereTabela(deus);
 		}
+	} else {
+			tabelaCadastro->InsereTabela(deus);
 	}
 }
 
