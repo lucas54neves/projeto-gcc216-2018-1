@@ -497,6 +497,7 @@ void ImprimeBlocoOrdem (TabelaH* tabelaCadastro) {
 	}
 }
 
+// Subprograma para ordenar os registros durante a inserção
 void InsertionSort(Dado* deus, int tam){
 	int i, j, aux;
 	char charAux1[50], charAux2[50], charAux3[200]; 
