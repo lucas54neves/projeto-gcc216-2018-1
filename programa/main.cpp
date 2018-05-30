@@ -30,11 +30,18 @@ int main() {
 	cout << "Sistema de cadastro: " << endl;
 	int opcao;
 	char questao;
+
+	// Criação da tabela hash
 	TabelaH* tabelaCadastro =  new TabelaH;
+
+	// Leitura das informações de uma tabela, caso exista uma no arquivo uppsala.txt
 	tabelaCadastro->LeTabelaArquivo();
+	
+	// Loop principal do programa
 	do {
 		Menu();
 		cin >> opcao;
+		// Estrutura seletiva para a escola das opções
 		switch (opcao) {
 			case 0:
 			{
@@ -45,8 +52,6 @@ int main() {
 			case 1:
 			{
 				// Subprograma para inserir um novo objeto no arquivo
-				// InsereDados(tabelaCadastro);
-				//Pronto !!
 				InsereDados(tabelaCadastro);
 				
 				cout << endl << "Deseja continuar no programa ? [y/n] " << endl;
@@ -62,7 +67,7 @@ int main() {
 			{
 				// Subprograma para remover um objeto do arquivo.
 				RemoveDados(tabelaCadastro);
-				cout << endl << "Deseja continuar no programa ? [y/n] " << endl;
+				cout << endl << "Deseja continuar no programa ? [s/n] " << endl;
 				cin >> questao;
 				if (questao == 'n') {
 					opcao = 0; 
@@ -75,7 +80,7 @@ int main() {
 			{
 				// Subprograma para consultar um deus no arquivo.
 				ConsultaDados(tabelaCadastro);
-				cout << endl << "Deseja continuar no programa ? [y/n] " << endl;
+				cout << endl << "Deseja continuar no programa ? [s/n] " << endl;
 				cin >> questao;
 				if (questao == 'n') {
 					opcao = 0; 
@@ -85,10 +90,10 @@ int main() {
 				break;
 			}
 			case 4:
-			{	//Pronto!
+			{
 				// Subprograma para imprimir todo o conteúdo do arquivo, na ordem de armazenamento.
 				ImprimeArquivoOrdem();
-				cout << endl << "Deseja continuar no programa ? [y/n] " << endl;
+				cout << endl << "Deseja continuar no programa ? [s/n] " << endl;
 				cin >> questao;
 				if (questao == 'n') {
 					opcao = 0; 

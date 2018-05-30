@@ -19,8 +19,9 @@
 
 using namespace std;
 
-/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ Início da implementação do bloco\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+// ############################ [Início da implementação do bloco] ###########################
 
+// Construtor da classe BlocosDados
 BlocosDados::BlocosDados () {
 	for (int i = 0; i < CAP_BLOCO; ++i) {
 		mBloco[i].id = -1;
@@ -32,6 +33,7 @@ BlocosDados::BlocosDados () {
 	mUso = false;
 }
 
+// Destrutor da classe BlocosDados
 BlocosDados::~BlocosDados () {
 	for (int i = 0; i < CAP_BLOCO; ++i) {
 		mBloco[i].id = -1;
@@ -43,6 +45,7 @@ BlocosDados::~BlocosDados () {
 	mCabecalho = -1;
 }
 
+// Método para inserir no bloco
 void BlocosDados::InsereBloco (Dado deus) {
 	if (!EmUso()) {
 		mBloco[mTamBloco] = deus;
@@ -61,7 +64,7 @@ void BlocosDados::InsereBloco (Dado deus) {
 	}
 }
 
-//Ḿétodo para encontrar a posição do bloco em bytes do arquivo
+// Método para encontrar a posição em bytes do bloco do arquivo
 int BlocosDados::PosicaoArquivo (BlocosDados* novoBloco) {
 	ifstream Leitura;
 	int pos = 0;
@@ -86,14 +89,17 @@ int BlocosDados::PosicaoArquivo (BlocosDados* novoBloco) {
   	return pos;	
 }
 
+// Método para verificar se o bloco está em uso
 bool BlocosDados::EmUso () {
 	return mUso;
 }
 
+// Método para verificar se o bloco está cheio
 bool BlocosDados::BlocoCheio () {
 	return (mTamBloco == 4);
 }
 
+// Método para a imprissão do bloco
 void BlocosDados::ImprimeBloco () {
 	if (mUso) {
 		cout << ">>>>>>>>>>>>>>>>>>>>>>[BLOCO]<<<<<<<<<<<<<<<<<<<<<<" << endl;
@@ -119,6 +125,7 @@ void BlocosDados::ImprimeBloco () {
 	cout << endl << endl;
 }
 
+// Método para impressão apenas do deus consultado
 void BlocosDados::ImpressaoConsulta (int id) {
 	bool existe = false;
 	for (int i = 0; i < mTamBloco; ++i) {
@@ -136,23 +143,19 @@ void BlocosDados::ImpressaoConsulta (int id) {
 		cout << "Esse id não está na cadastrado " << endl;
 }
 
-//Método para encontrar a posição no vetor de struct no bloco
+// Método para encontrar a posição no vetor do bloco
 int BlocosDados::PosDeus (int id) {
-	bool existe = false;
 	int posD = -1;
 	for (int i = 0; i < mTamBloco; ++i) {
 		if (mBloco[i].id == id) {
 			posD = i;
-			existe = true;
 		}
 	}
-	if (!existe) {
-		return posD;
-	}
+	
 	return posD;
 }
 
-//Método para remover deus na posição do vetor e também atualizar posições.
+// Método para remover um deus na posição do vetor e também atualizar posições
 void BlocosDados::RemoveDeus (int posId) {
 	mBloco[posId].id = -1;
 	if (posId < mTamBloco -1) {
@@ -167,6 +170,7 @@ void BlocosDados::RemoveDeus (int posId) {
 	--mTamBloco; 
 }
 
+// Método para verificar um ID repetido
 bool BlocosDados::ProcuraIdRepetido (int id) {
 	bool existe = false;
 	for (int i = 0; i < mTamBloco; ++i) {
@@ -177,14 +181,16 @@ bool BlocosDados::ProcuraIdRepetido (int id) {
 	return existe;
 }
 
+// Método para retornar o tamanho do bloco
 int BlocosDados::TamanhoBloc () {
 	return mTamBloco;
 }
 
-/*////////////////////////////////////////// Fim da implementação do bloco/////////////////////////////*/
+// ############################## [Fim da implementação do bloco] ##############################
 
-/*/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ Início da implementação da tabela\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+// ############################ [Início da implementação da tabela] ############################
 
+// Construtor da tabela
 TabelaH::TabelaH (int cap)  {
 	mCapacidade = cap;
 	mElementos = new int[mCapacidade];
@@ -193,6 +199,7 @@ TabelaH::TabelaH (int cap)  {
 	}
 }
 
+// Destrutor da tabela
 TabelaH::~TabelaH () {
 	ofstream saida("uppsala.txt");
 	for (int i = 0; i < mCapacidade; ++i) {
@@ -203,6 +210,7 @@ TabelaH::~TabelaH () {
 	delete[] mElementos;
 }
 
+// Método para inserir na tabela
 void TabelaH::InsereTabela (Dado deus) {
 	int pos = ConverteDecimal(FuncaoHash(deus.id));
 	if (PosOcupada(pos)) { // Bloco existe
@@ -211,11 +219,8 @@ void TabelaH::InsereTabela (Dado deus) {
 		auxBloco->InsereBloco(deus);
 		EscreveArquivoVelho(auxBloco, mElementos[pos]);
 		delete auxBloco;
-		// Posição no arquivo = mElementos[pos]
-		// Puxa no arquivo binário o bloco
-		// Verifica se o bloco não está cheio
 	} else { // Bloco não existe
-		// Crie um novo bloco
+		// Cria um novo bloco
 		BlocosDados* novoBloco = new BlocosDados;
 		novoBloco->InsereBloco(deus);
 		EscreveArquivoNovo(novoBloco);
@@ -225,6 +230,7 @@ void TabelaH::InsereTabela (Dado deus) {
 	}
 }
 
+// Método para ler uma tabela do arquivo
 void TabelaH::LeTabelaArquivo () {
 	ifstream leituraTH("uppsala.txt");
   	int posTH, byte;
@@ -240,16 +246,19 @@ void TabelaH::LeTabelaArquivo () {
   	}
 }
 
+// Método para atualizar a tabela
 void TabelaH::AtualizaTabela (int h) {
 	mElementos[h] = -1;
 }
 
- void TabelaH::ImprimeTabela () {
- 	for (int i = 0; i < mCapacidade; ++i) {
- 		cout << ConverteBinario(i) << "\t" << mElementos[i] << endl;
- 	}
- }
+// Método para atualiazar a tabela
+void TabelaH::ImprimeTabela () {
+	for (int i = 0; i < mCapacidade; ++i) {
+		cout << ConverteBinario(i) << "\t" << mElementos[i] << endl;
+	}
+}
 
+// Método para verificar a posição ocupada
 bool TabelaH::PosOcupada (int pos) {
 	if (mElementos[pos] == -1) {
 		return false;
@@ -258,19 +267,22 @@ bool TabelaH::PosOcupada (int pos) {
 	}
 }
 
+// Método para retornar a posição em bytes
 int TabelaH::PosicaoBytes (int h) {
 	return mElementos[h];
 }
 
-/*////////////////////////////////// Fim da implementação da tabela//////////////////////////////////*/
+// ############################ [Fim da implementação da tabela] ############################
 
-/*/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ Início da implementação dos módulos globais\\\\\\\\\\\\\\\\\\\\*/
+// ####################### [Início da implementação dos módulos globais] ####################
 
+// Subprograma da função hash
 int FuncaoHash (int i) {
 	int h = i % CAP_TABELA;
 	return ConverteBinario(h);
 }
 
+// Subprograma para converter um decimal para binário
 int ConverteBinario (int decimal) {
     int aux[4];
     int resto, binario;
@@ -288,6 +300,7 @@ int ConverteBinario (int decimal) {
     return binario;
 }
 
+// Subprograma para converter um decimal para binário
 int ConverteDecimal (int binario) {
     int aux[4];
     int decimal;
@@ -303,6 +316,7 @@ int ConverteDecimal (int binario) {
     return decimal;
 }
 
+// Subprograma para inserir os dados
 void InsereDados (TabelaH* tabelaCadastro) {
 	Dado deus;
 	// Leitura de Dados:
@@ -342,6 +356,7 @@ void InsereDados (TabelaH* tabelaCadastro) {
 	}
 }
 
+// Subprograma para escrever escrever em um arquivo novo
 void EscreveArquivoNovo (BlocosDados* auxBloco) {
 	ofstream salva("asgard.bin", ios::binary|ios::app);
 	if (salva.is_open()) {
@@ -350,6 +365,7 @@ void EscreveArquivoNovo (BlocosDados* auxBloco) {
 	salva.close();
 }
 
+// Subprograma para escrever em um arquivo já usado
 void EscreveArquivoVelho (BlocosDados* auxBloco, int posBytes) {
 	fstream salva("asgard.bin", ios::binary| ios::out| ios::in);
 	if (salva.is_open()) {
@@ -359,6 +375,7 @@ void EscreveArquivoVelho (BlocosDados* auxBloco, int posBytes) {
 	salva.close();
 }
 
+// Subprograma para carregar um bloco
 void CarregaBloco (BlocosDados* auxBloco, int posBytes) {
 	ifstream Carregar;
 	Carregar.open("asgard.bin", ios::binary);
@@ -371,6 +388,7 @@ void CarregaBloco (BlocosDados* auxBloco, int posBytes) {
 	Carregar.close();
 }
 
+// Subprograma para remover dados
 void RemoveDados (TabelaH* tabelaCadastro) {
 	int id, numH;
 	cout << "Insira um ID: " << endl;
@@ -419,6 +437,7 @@ void RemoveDados (TabelaH* tabelaCadastro) {
 	}
 }
 
+// Subprograma para consultar os dados
 void ConsultaDados (TabelaH* tabelaCadastro) {
 	int id, numH;
 	cout << "Insira um ID: " << endl;
@@ -432,6 +451,7 @@ void ConsultaDados (TabelaH* tabelaCadastro) {
 	}
 }
 
+// Subprograma para imprimri o arquivo em ordem
 void ImprimeArquivoOrdem () {
 	ifstream leitura;
 	leitura.open("asgard.bin", ios::binary);
@@ -450,6 +470,8 @@ void ImprimeArquivoOrdem () {
 	
   	leitura.close();
 }
+
+// Subprograma para imprimir o bloco em ordem
 void ImprimeBlocoOrdem (TabelaH* tabelaCadastro) {
 	int numBin;
 	tabelaCadastro->ImprimeTabela();
@@ -499,6 +521,7 @@ void InsertionSort(Dado* deus, int tam){
 	}
 }
 
+// Subprograma para o menu do programa
 void Menu() {
 	cout << endl;
 	cout << "              |&&&&&&&&&&&&&&&&&&&&&[MENU]&&&&&&&&&&&&&&&&&&&&&&&&&|    " << endl;
@@ -524,4 +547,4 @@ void Menu() {
 	cout << endl;
 }
 
-/*///////////////////////////Fim da implementação dos módulos globais///////////////////////*/
+// ######################### [Fim da implementação dos módulos globais] ############################
