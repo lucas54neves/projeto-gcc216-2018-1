@@ -40,6 +40,7 @@ class BlocosDados {
 		int PosDeus (int id);
 		void RemoveDeus (int posId);
 		bool ProcuraIdRepetido (int id);
+		inline int TamanhoBloc ();
 	protected:
 		bool mUso;
 		Dado mBloco[CAP_BLOCO];
@@ -59,6 +60,7 @@ class TabelaH {
 		void LeTabelaArquivo ();
 		void ImprimeTabela ();
 		inline int PosicaoBytes (int h);
+		void AtualizaTabela (int h);
 	protected :
 		int* mElementos;
 		int mCapacidade;

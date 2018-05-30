@@ -177,6 +177,10 @@ bool BlocosDados::ProcuraIdRepetido (int id) {
 	return existe;
 }
 
+int BlocosDados::TamanhoBloc () {
+	return mTamBloco;
+}
+
 /*////////////////////////////////////////// Fim da implementação do bloco/////////////////////////////*/
 
 /*/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ Início da implementação da tabela\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -234,6 +238,10 @@ void TabelaH::LeTabelaArquivo () {
   		cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
   		ImprimeTabela();
   	}
+}
+
+void TabelaH::AtualizaTabela (int h) {
+	mElementos[h] = -1;
 }
 
  void TabelaH::ImprimeTabela () {
@@ -319,6 +327,7 @@ void InsereDados (TabelaH* tabelaCadastro) {
 			cout << "Deseja tentar outro id [y/n] " << endl;
 			cin >> opcao;
 			if (opcao == 'y') {
+				system("clear");
 				InsereDados(tabelaCadastro);
 			} else {
 				system("clear");
@@ -378,6 +387,7 @@ void RemoveDados (TabelaH* tabelaCadastro) {
 			cout << "Deseja sair da posição [y/n] " << endl;
 			cin >> opcao;
 			if (opcao == 'n') {
+				system("clear");
 				RemoveDados(tabelaCadastro);
 			} else {
 				system("clear");
@@ -387,6 +397,9 @@ void RemoveDados (TabelaH* tabelaCadastro) {
 		} else {
 			blocRem->RemoveDeus(posId);
 			EscreveArquivoVelho(blocRem, posBytes);
+			if (blocRem->TamanhoBloc() == 0) {
+				tabelaCadastro->AtualizaTabela(numH);
+			}
 			cout << "deus Removido com sucesso" << endl;
 		}
 		delete blocRem;
@@ -396,6 +409,7 @@ void RemoveDados (TabelaH* tabelaCadastro) {
 		cout << "Deseja sair da posição [y/n] " << endl;
 		cin >> opcao;
 		if (opcao == 'n') {
+			system("clear");
 			RemoveDados(tabelaCadastro);
 		} else {
 			system("clear");
@@ -447,8 +461,8 @@ void ImprimeBlocoOrdem (TabelaH* tabelaCadastro) {
 		cout << "Deseja sair da posição [y/n] " << endl;
 		cin >> opcao;
 		if (opcao == 'n') {
+			system("clear");
 			ImprimeBlocoOrdem(tabelaCadastro);
-			cout << endl;
 		} else if (opcao != 'n') {
 			system("clear");
 			Menu();
