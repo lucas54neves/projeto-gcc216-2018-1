@@ -10,7 +10,10 @@ metodos.o: metodos.cpp metodos.hpp
 	@g++ -o metodos.o metodos.cpp -c -W -Wall -ansi -pedantic
 
 limpar:
-	@rm -rf *.o ~programa
+	@rm -rf *.o *~ programa
+
+limpaTudo:
+	@rm -rf *.o *~ programa *.bin *.txt
 
 iniciar:
 	@./programa
