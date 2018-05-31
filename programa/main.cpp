@@ -5,13 +5,6 @@
   --Arquivo contém as execuções;
 */
 
-/*
-	int id;
-	char nome[50];
-	char dominio[10];
-	char biografia[200]
-*/
-
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
@@ -54,7 +47,7 @@ int main() {
 				// Subprograma para inserir um novo objeto no arquivo
 				InsereDados(tabelaCadastro);
 				
-				cout << endl << "Deseja continuar no programa ? [y/n] " << endl;
+				cout << endl << "Deseja continuar no programa ? [s/n] " << endl;
 				cin >> questao;
 				if (questao == 'n') {
 					opcao = 0; 
@@ -106,7 +99,7 @@ int main() {
 			{
 				// Subprograma para imprimir todo o bloco com os deuses ordenados.
 				ImprimeBlocoOrdem(tabelaCadastro);
-				cout << endl << "Deseja continuar no programa ? [y/n] " << endl;
+				cout << endl << "Deseja continuar no programa ? [s/n] " << endl;
 				cin >> questao;
 				if (questao == 'n') {
 					opcao = 0; 

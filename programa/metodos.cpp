@@ -26,7 +26,7 @@ BlocosDados::BlocosDados () {
 	for (int i = 0; i < CAP_BLOCO; ++i) {
 		mBloco[i].id = -1;
 		mBloco[i].nome[50] = ' ';
-		mBloco[i].dominio[10] = ' ';
+		mBloco[i].dominio[50] = ' ';
 		mBloco[i].biografia[200] = ' ';
 	}
 	mTamBloco = 0;
@@ -38,7 +38,7 @@ BlocosDados::~BlocosDados () {
 	for (int i = 0; i < CAP_BLOCO; ++i) {
 		mBloco[i].id = -1;
 		mBloco[i].nome[50] = ' ';
-		mBloco[i].dominio[10] = ' ';
+		mBloco[i].dominio[50] = ' ';
 		mBloco[i].biografia[200] = ' ';
 	}
 	mTamBloco = 0;
@@ -67,7 +67,7 @@ void BlocosDados::InsereBloco (Dado deus) {
 // Método para encontrar a posição em bytes do bloco do arquivo
 int BlocosDados::PosicaoArquivo (BlocosDados* novoBloco) {
 	ifstream Leitura;
-	int pos = 0;
+	int pos = -1;
   	Leitura.open("asgard.bin", ios::binary);
   	if (Leitura) {
 		Leitura.seekg(0, Leitura.end);
@@ -99,7 +99,7 @@ bool BlocosDados::BlocoCheio () {
 	return (mTamBloco == 4);
 }
 
-// Método para a imprissão do bloco
+// Método para a impressão do bloco
 void BlocosDados::ImprimeBloco () {
 	if (mUso) {
 		cout << ">>>>>>>>>>>>>>>>>>>>>>[BLOCO]<<<<<<<<<<<<<<<<<<<<<<" << endl;
@@ -118,7 +118,7 @@ void BlocosDados::ImprimeBloco () {
 			cout << "===================================================" << endl;
 		}
 		//Isto é necessário pois como deus é um ponteiro se não fosse apontado para NULL antes de deletado
-		//estará apagando o endero dos blocos.
+		//estará apagando o endereço dos blocos.
 		deus = NULL;
 		delete[] deus;
 	}
@@ -184,6 +184,24 @@ bool BlocosDados::ProcuraIdRepetido (int id) {
 // Método para retornar o tamanho do bloco
 int BlocosDados::TamanhoBloc () {
 	return mTamBloco;
+}
+
+// Método para a impressão de ids
+void BlocosDados::ImprimeDeusId () {
+	if (mUso) {
+		Dado* deus = new Dado[mTamBloco];
+		deus = mBloco;
+		InsertionSort(deus, mTamBloco);
+		for (int i = 0; i < mTamBloco; ++i) {
+			cout << "Nome:" << deus[i].nome << endl;
+			cout << "ID: " << deus[i].id << endl;
+			cout << endl;
+		}
+		//Isto é necessário pois como deus é um ponteiro se não fosse apontado para NULL antes de deletado
+		//estará apagando o endereço dos blocos.
+		deus = NULL;
+		delete[] deus;
+	}
 }
 
 // ############################## [Fim da implementação do bloco] ##############################
@@ -326,7 +344,7 @@ void InsereDados (TabelaH* tabelaCadastro) {
 	cout << "Entre com o nome do deus:" << endl;
 	cin.getline(deus.nome, 50);
 	cout << "Entre com o domínio do deus:" << endl;
-	cin.getline(deus.dominio, 10);
+	cin.getline(deus.dominio, 50);
 	cout << "Entre com a biografia do deus:" << endl;
 	cin.getline(deus.biografia, 200);
 	
@@ -338,9 +356,9 @@ void InsereDados (TabelaH* tabelaCadastro) {
 		if (existeRep) {
 			cout << "Id repetido !" << endl;
 			char opcao;
-			cout << "Deseja tentar outro id [y/n] " << endl;
+			cout << "Deseja tentar outro id [s/n] " << endl;
 			cin >> opcao;
-			if (opcao == 'y') {
+			if (opcao == 's') {
 				system("clear");
 				InsereDados(tabelaCadastro);
 			} else {
@@ -350,9 +368,11 @@ void InsereDados (TabelaH* tabelaCadastro) {
 			}
 		} else {
 			tabelaCadastro->InsereTabela(deus);
+			cout << endl <<"deus Cadastrado com sucesso" << endl;
 		}
 	} else {
 			tabelaCadastro->InsereTabela(deus);
+			cout << endl << "deus Cadastrado com sucesso" << endl;
 	}
 }
 
@@ -390,6 +410,7 @@ void CarregaBloco (BlocosDados* auxBloco, int posBytes) {
 
 // Subprograma para remover dados
 void RemoveDados (TabelaH* tabelaCadastro) {
+	ImprimeId();
 	int id, numH;
 	cout << "Insira um ID: " << endl;
 	cin >> id;
@@ -402,7 +423,7 @@ void RemoveDados (TabelaH* tabelaCadastro) {
  		if (posId == -1) {
 			cout << "Não exite deus com esse id não está na cadastrado " << endl;
 			char opcao;
-			cout << "Deseja sair da posição [y/n] " << endl;
+			cout << "Deseja sair da posição [s/n] " << endl;
 			cin >> opcao;
 			if (opcao == 'n') {
 				system("clear");
@@ -424,7 +445,7 @@ void RemoveDados (TabelaH* tabelaCadastro) {
 	} else  {
 		cout << "Não exite deus com esse id não está na cadastrado " << endl;
 		char opcao;
-		cout << "Deseja sair da posição [y/n] " << endl;
+		cout << "Deseja sair da posição [s/n] " << endl;
 		cin >> opcao;
 		if (opcao == 'n') {
 			system("clear");
@@ -480,7 +501,7 @@ void ImprimeBlocoOrdem (TabelaH* tabelaCadastro) {
 	if (tabelaCadastro->PosicaoBytes(ConverteDecimal(numBin)) == -1) {
 		cout << "Posição Desocupada ! " << endl << endl;
 		char opcao;
-		cout << "Deseja sair da posição [y/n] " << endl;
+		cout << "Deseja sair da posição [s/n] " << endl;
 		cin >> opcao;
 		if (opcao == 'n') {
 			system("clear");
@@ -520,6 +541,25 @@ void InsertionSort(Dado* deus, int tam){
 	strcpy(deus[j+1].dominio, charAux2);
 	strcpy(deus[j+1].biografia, charAux3);
 	}
+}
+
+void ImprimeId () {
+	ifstream leitura;
+		leitura.open("asgard.bin", ios::binary);
+		if (leitura.is_open()) {
+			BlocosDados* impTdId = new BlocosDados;
+			leitura.seekg(0, ios::end);
+			int tamArq = leitura.tellg();
+			leitura.seekg(0, ios::beg);
+			int var = sizeof(BlocosDados);
+			int qntBloco = tamArq/var;
+			for (int i = 0; i < qntBloco; ++i) {		
+				leitura.read(reinterpret_cast<char*> (impTdId), sizeof(BlocosDados));
+				impTdId->ImprimeDeusId();
+			}
+		}
+		
+	leitura.close();
 }
 
 // Subprograma para o menu do programa

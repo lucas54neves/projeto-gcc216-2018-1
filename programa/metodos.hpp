@@ -18,7 +18,7 @@ using namespace std;
 struct Deuses {
 	int id;
 	char nome[50];
-	char dominio[10];
+	char dominio[50];
 	char biografia[200];
 };
 
@@ -41,6 +41,7 @@ class BlocosDados {
 		void RemoveDeus (int posId);
 		bool ProcuraIdRepetido (int id);
 		inline int TamanhoBloc ();
+		void ImprimeDeusId ();
 	protected:
 		bool mUso;
 		Dado mBloco[CAP_BLOCO];
@@ -80,5 +81,6 @@ void ConsultaDados (TabelaH* tabelaCadastro);
 void ImprimeArquivoOrdem ();
 void ImprimeBlocoOrdem (TabelaH* tabelaCadastro);
 void InsertionSort (Dado* deus, int tam);
+void ImprimeId ();
 
 #endif // METODOS
