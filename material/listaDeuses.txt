@@ -1,4 +1,4 @@
-1	Aegir	Mares	Deus dos mares, marido de Ran e temido e respeirado pelos Vikings
+﻿1	Aegir	Mares	Deus dos mares, marido de Ran e temido e respeirado pelos Vikings
 2	Aud	Noite	Filho da noite e tio de Thor
 3	Balder	Justiça	Deus da justiça e da sabedoria, um dos filhos de Odim com Frigga
 4	Bragi	Sabedoria	Deus da sabedoria e da poesia
@@ -26,10 +26,10 @@
 26	Nana	Tristeza	Quando seu marido morre, joga-se na pira funerária dele devido sua tristeza
 27	Njord	Ventos	Deus dos ventos e da fertilidade
 28	Odim	Sabedoria	Pai de Todos
-29	Ran	Mares	Governo os mares
+29	Ran	Mares	Governa os mares
 30	Sif	Combate	Deusa da habilidade em combate
 31	Skadi	Inverno	Deusa do inverno
-32	Sigel	Sol	Deusa do Sol. Vai ser assassinada em pleno Ragnarok
+32	Sigel	Sol	Deusa do Sol e vai ser assassinada em pleno Ragnarok
 33	Syn	Guardiã	Guarda as portas dos mundo mágicos
 34	Thor	Trovão	Deus do trovão e dos raios
 35	Thrud	Tempo	Regente do tempo
