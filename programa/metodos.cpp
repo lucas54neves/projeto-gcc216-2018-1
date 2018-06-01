@@ -370,7 +370,7 @@ void InsereDados (TabelaH* tabelaCadastro) {
 			cin >> opcao;
 			if (opcao == 's') {
 				system("clear");
-				InsereDados(tabelaCadastro);
+				return InsereDados(tabelaCadastro);
 			} else {
 				system("clear");
 				Menu();
@@ -444,11 +444,11 @@ void RemoveDados (TabelaH* tabelaCadastro) {
  		if (posId == -1) {
 			cout << "Não exite deus com esse id não está na cadastrado " << endl;
 			char opcao;
-			cout << "Deseja sair da posição [s/n] " << endl;
+			cout << "Deseja sair da Remoção [s/n] " << endl;
 			cin >> opcao;
 			if (opcao == 'n') {
 				system("clear");
-				RemoveDados(tabelaCadastro);
+				return RemoveDados(tabelaCadastro);
 			} else {
 				system("clear");
 				Menu();
@@ -466,11 +466,11 @@ void RemoveDados (TabelaH* tabelaCadastro) {
 	} else  {
 		cout << "Não exite deus com esse id não está na cadastrado " << endl;
 		char opcao;
-		cout << "Deseja sair da posição [s/n] " << endl;
+		cout << "Deseja sair da Remoção [s/n] " << endl;
 		cin >> opcao;
 		if (opcao == 'n') {
 			system("clear");
-			RemoveDados(tabelaCadastro);
+			return RemoveDados(tabelaCadastro);
 		} else {
 			system("clear");
 			Menu();
@@ -547,7 +547,7 @@ void ImprimeBlocoOrdem (TabelaH* tabelaCadastro) {
 		cin >> opcao;
 		if (opcao == 'n') {
 			system("clear");
-			ImprimeBlocoOrdem(tabelaCadastro);
+			return ImprimeBlocoOrdem(tabelaCadastro);
 		} else if (opcao != 'n') {
 			system("clear");
 			Menu();
