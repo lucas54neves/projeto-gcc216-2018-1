@@ -162,9 +162,7 @@ void BlocosDados::RemoveDeus (int posId) {
 		for (int i = posId; i < mTamBloco-1; ++i) {
 			mBloco[i] = mBloco[i+1];  
 		}
-	cout << "mTamBloco: " << mTamBloco << endl; 
-	} else if (mTamBloco == 1) {
-		cout << "mTamBloco: " << mTamBloco << endl; 
+	} else if (mTamBloco == 1) { 
 		mUso = false;
 	}
 	--mTamBloco; 
@@ -189,14 +187,16 @@ int BlocosDados::TamanhoBloc () {
 // Método para a impressão de ids
 void BlocosDados::ImprimeDeusId () {
 	if (mUso) {
+		cout << "|BLOCO" << " " << mCabecalho << "|" << endl;
 		Dado* deus = new Dado[mTamBloco];
 		deus = mBloco;
 		InsertionSort(deus, mTamBloco);
 		for (int i = 0; i < mTamBloco; ++i) {
-			cout << "Nome:" << deus[i].nome << endl;
-			cout << "ID: " << deus[i].id << endl;
+			cout << "ID: " << deus[i].id << " "; 
+			cout << "Nome:" << deus[i].nome;
 			cout << endl;
 		}
+		cout << endl;
 		// Isto é necessário pois como deus é um ponteiro se não fosse apontado para NULL antes de deletado
 		// estará apagando o endereço dos blocos.
 		deus = NULL;
@@ -338,47 +338,53 @@ int ConverteDecimal (int binario) {
 void InsereDados (TabelaH* tabelaCadastro) {
 	Dado deus;
 	// Leitura de Dados:
-	cout << "Entre com o id do deus:" << endl;
-	cin >> deus.id;
-	if (cin.fail()) {
-		cout << "Colocou caráter ao invés de número! Tente novamente." << endl;
-		InsereDados(tabelaCadastro);
-	} else {
-		cin.ignore();
-		cout << "Entre com o nome do deus:" << endl;
-		cin.getline(deus.nome, 50);
-		cout << "Entre com o domínio do deus:" << endl;
-		cin.getline(deus.dominio, 50);
-		cout << "Entre com a biografia do deus:" << endl;
-		cin.getline(deus.biografia, 200);
 
-		int posVal = tabelaCadastro->PosicaoBytes(ConverteDecimal(FuncaoHash(deus.id)));
-		if (posVal != -1) {
-			BlocosDados* blocIns = new BlocosDados;
-			CarregaBloco(blocIns, posVal);
-			bool existeRep = blocIns->ProcuraIdRepetido(deus.id);
-			if (existeRep) {
-				cout << "Id repetido !" << endl;
-				char opcao;
-				cout << "Deseja tentar outro id [s/n] " << endl;
-				cin >> opcao;
-				if (opcao == 's') {
-					system("clear");
-					InsereDados(tabelaCadastro);
-				} else {
-					system("clear");
-					Menu();
-					return;
-				}
+	bool fail;
+	do {
+		cout << "Entre com o id do deus:" << endl;
+		cin >> deus.id;
+		fail = cin.fail(); 
+		cin.clear();
+		cin.ignore(200, '\n');
+		if (fail == true) {
+			cerr << "Colocou caráter ao invés de número! Tente novamente !" << endl;
+		}
+	} while (fail == true);
+	
+	cout << "Entre com o nome do deus:" << endl;
+	cin.getline(deus.nome, 50);
+	cout << "Entre com o domínio do deus:" << endl;
+	cin.getline(deus.dominio, 50);
+	cout << "Entre com a biografia do deus:" << endl;
+	cin.getline(deus.biografia, 200);
+
+	int posVal = tabelaCadastro->PosicaoBytes(ConverteDecimal(FuncaoHash(deus.id)));
+	if (posVal != -1) {
+		BlocosDados* blocIns = new BlocosDados;
+		CarregaBloco(blocIns, posVal);
+		bool existeRep = blocIns->ProcuraIdRepetido(deus.id);
+		if (existeRep) {
+			cout << "Id repetido !" << endl;
+			char opcao;
+			cout << "Deseja tentar outro id [s/n] " << endl;
+			cin >> opcao;
+			if (opcao == 's') {
+				system("clear");
+				InsereDados(tabelaCadastro);
 			} else {
-				tabelaCadastro->InsereTabela(deus);
-				cout << endl <<"Deus Cadastrado com sucesso" << endl;
+				system("clear");
+				Menu();
+				return;
 			}
 		} else {
-				tabelaCadastro->InsereTabela(deus);
-				cout << endl << "Deus Cadastrado com sucesso" << endl;
+			tabelaCadastro->InsereTabela(deus);
+			cout << endl <<"Deus Cadastrado com sucesso" << endl;
 		}
+	} else {
+		tabelaCadastro->InsereTabela(deus);
+		cout << endl << "Deus Cadastrado com sucesso" << endl;
 	}
+	
 }
 
 // Subprograma para escrever escrever em um arquivo novo
@@ -417,42 +423,25 @@ void CarregaBloco (BlocosDados* auxBloco, int posBytes) {
 void RemoveDados (TabelaH* tabelaCadastro) {
 	ImprimeId();
 	int id, numH;
-	cout << "Insira um ID: " << endl;
-	cin >> id;
+	bool fail;
+	do {
+		cout << "Insira um ID: " << endl;
+		cin >> id;
+		fail = cin.fail(); 
+		cin.clear();
+		cin.ignore(200, '\n');
+		if (fail == true) {
+			cerr << "Colocou caráter ao invés de número! Tente novamente !" << endl;
+		}
+	} while (fail == true);
 
-	if (cin.fail()) {
-		cout << "Colocou caráter ao invés de número! Tente novamente." << endl;
-		RemoveDados(tabelaCadastro);
-	} else {
-		numH = ConverteDecimal(FuncaoHash(id));
-		if (tabelaCadastro->PosOcupada(numH)) {
-			BlocosDados* blocRem = new BlocosDados;
-			int posBytes = tabelaCadastro->PosicaoBytes(numH);
-			CarregaBloco(blocRem, posBytes);
-			int posId = blocRem->PosDeus(id);
-	 		if (posId == -1) {
-				cout << "Não exite deus com esse id não está na cadastrado " << endl;
-				char opcao;
-				cout << "Deseja sair da posição [s/n] " << endl;
-				cin >> opcao;
-				if (opcao == 'n') {
-					system("clear");
-					RemoveDados(tabelaCadastro);
-				} else {
-					system("clear");
-					Menu();
-					return;
-				}
-			} else {
-				blocRem->RemoveDeus(posId);
-				EscreveArquivoVelho(blocRem, posBytes);
-				if (blocRem->TamanhoBloc() == 0) {
-					tabelaCadastro->AtualizaTabela(numH);
-				}
-				cout << "Deus removido com sucesso" << endl;
-			}
-			delete blocRem;
-		} else  {
+	numH = ConverteDecimal(FuncaoHash(id));
+	if (tabelaCadastro->PosOcupada(numH)) {
+		BlocosDados* blocRem = new BlocosDados;
+		int posBytes = tabelaCadastro->PosicaoBytes(numH);
+		CarregaBloco(blocRem, posBytes);
+		int posId = blocRem->PosDeus(id);
+ 		if (posId == -1) {
 			cout << "Não exite deus com esse id não está na cadastrado " << endl;
 			char opcao;
 			cout << "Deseja sair da posição [s/n] " << endl;
@@ -465,6 +454,27 @@ void RemoveDados (TabelaH* tabelaCadastro) {
 				Menu();
 				return;
 			}
+		} else {
+			blocRem->RemoveDeus(posId);
+			EscreveArquivoVelho(blocRem, posBytes);
+			if (blocRem->TamanhoBloc() == 0) {
+				tabelaCadastro->AtualizaTabela(numH);
+			}
+			cout << "Deus removido com sucesso" << endl;
+		}
+		delete blocRem;
+	} else  {
+		cout << "Não exite deus com esse id não está na cadastrado " << endl;
+		char opcao;
+		cout << "Deseja sair da posição [s/n] " << endl;
+		cin >> opcao;
+		if (opcao == 'n') {
+			system("clear");
+			RemoveDados(tabelaCadastro);
+		} else {
+			system("clear");
+			Menu();
+			return;
 		}
 	}
 }
@@ -472,21 +482,26 @@ void RemoveDados (TabelaH* tabelaCadastro) {
 // Subprograma para consultar os dados
 void ConsultaDados (TabelaH* tabelaCadastro) {
 	int id, numH;
-	cout << "Insira um ID: " << endl;
-	cin >> id;
-
-	if (cin.fail()) {
-		cout << "Colocou caráter ao invés de número! Tente novamente." << endl;
-		ConsultaDados(tabelaCadastro);
-	} else {
-		numH = ConverteDecimal(FuncaoHash(id));
-		if (tabelaCadastro->PosOcupada(numH)) {
-			BlocosDados* blocCons = new BlocosDados;
-			CarregaBloco(blocCons, tabelaCadastro->PosicaoBytes(numH));
-			blocCons->ImpressaoConsulta(id);
-			delete blocCons;
+	bool fail;
+	do {
+		cout << "Insira um ID: " << endl;
+		cin >> id;
+		fail = cin.fail(); 
+		cin.clear();
+		cin.ignore(200, '\n');
+		if (fail == true) {
+			cerr << "Colocou caráter ao invés de número! Tente novamente !" << endl;
 		}
+	} while (fail == true);
+
+	numH = ConverteDecimal(FuncaoHash(id));
+	if (tabelaCadastro->PosOcupada(numH)) {
+		BlocosDados* blocCons = new BlocosDados;
+		CarregaBloco(blocCons, tabelaCadastro->PosicaoBytes(numH));
+		blocCons->ImpressaoConsulta(id);
+		delete blocCons;
 	}
+	
 }
 
 // Subprograma para imprimri o arquivo em ordem
@@ -513,31 +528,35 @@ void ImprimeArquivoOrdem () {
 void ImprimeBlocoOrdem (TabelaH* tabelaCadastro) {
 	int numBin;
 	tabelaCadastro->ImprimeTabela();
-	cout << endl << "Insira uma posição em número binário correspondente à tabela: " << endl;
-	cin >> numBin;
-
-	if (cin.fail()) {
-		cout << "Colocou caráter ao invés de número! Tente novamente." << endl;
-		ImprimeBlocoOrdem(tabelaCadastro);
-	} else {
-		if (tabelaCadastro->PosicaoBytes(ConverteDecimal(numBin)) == -1) {
-			cout << "Posição Desocupada ! " << endl << endl;
-			char opcao;
-			cout << "Deseja sair da posição [s/n] " << endl;
-			cin >> opcao;
-			if (opcao == 'n') {
-				system("clear");
-				ImprimeBlocoOrdem(tabelaCadastro);
-			} else if (opcao != 'n') {
-				system("clear");
-				Menu();
-				return;
-			}
-		} else {
-			BlocosDados* blocOrd = new BlocosDados;
-			CarregaBloco(blocOrd, tabelaCadastro->PosicaoBytes(ConverteDecimal(numBin)));
-			blocOrd->ImprimeBloco();
+	bool fail;
+	do {
+		cout << endl << "Insira uma posição em número binário correspondente à tabela: " << endl;
+		cin >> numBin;
+		fail = cin.fail(); 
+		cin.clear();
+		cin.ignore(200, '\n');
+		if (fail == true) {
+			cerr << "Colocou caráter ao invés de número! Tente novamente !" << endl;
 		}
+	} while (fail == true);
+	
+	if (tabelaCadastro->PosicaoBytes(ConverteDecimal(numBin)) == -1) {
+		cout << "Posição Desocupada ! " << endl << endl;
+		char opcao;
+		cout << "Deseja sair da posição [s/n] " << endl;
+		cin >> opcao;
+		if (opcao == 'n') {
+			system("clear");
+			ImprimeBlocoOrdem(tabelaCadastro);
+		} else if (opcao != 'n') {
+			system("clear");
+			Menu();
+			return;
+		}
+	} else {
+		BlocosDados* blocOrd = new BlocosDados;
+		CarregaBloco(blocOrd, tabelaCadastro->PosicaoBytes(ConverteDecimal(numBin)));
+		blocOrd->ImprimeBloco();
 	}
 }
 
@@ -556,7 +575,6 @@ void InsertionSort(Dado* deus, int tam){
 			strcpy(deus[j+1].nome, deus[j].nome);
 			strcpy(deus[j+1].dominio, deus[j].dominio);
 			strcpy(deus[j+1].biografia, deus[j].biografia);
-
 			j--;
 		}
 	deus[j+1].id = aux;
