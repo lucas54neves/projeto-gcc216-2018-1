@@ -82,7 +82,7 @@ int BlocosDados::PosicaoArquivo (BlocosDados* novoBloco) {
 			}
   		}
   	} else if (!Leitura) {
-  		cout << endl << "Essa deus não está cadastrado" << endl;
+  		cout << endl << "Esse deus não está cadastrado" << endl;
   		pos = -1;
   	}
   	Leitura.close();
@@ -366,7 +366,7 @@ void InsereDados (TabelaH* tabelaCadastro) {
 		if (existeRep) {
 			cout << "Id repetido !" << endl;
 			char opcao;
-			cout << "Deseja tentar outro id [s/n] " << endl;
+			cout << "Deseja tentar outro id ? [s/n] " << endl;
 			cin >> opcao;
 			if (opcao == 's') {
 				system("clear");
@@ -414,7 +414,7 @@ void CarregaBloco (BlocosDados* auxBloco, int posBytes) {
 		Carregar.seekg(posBytes, ios::cur);
 		Carregar.read((char*)(auxBloco), sizeof(BlocosDados));
 	} else {
-		cout << endl << "Erro na leitura do arquivo ou arquivo inesistente!" << endl << endl;
+		cerr << endl << "Erro na leitura do arquivo ou arquivo inesistente!" << endl << endl;
 	}
 	Carregar.close();
 }
@@ -444,7 +444,7 @@ void RemoveDados (TabelaH* tabelaCadastro) {
  		if (posId == -1) {
 			cout << "Não exite deus com esse id não está na cadastrado " << endl;
 			char opcao;
-			cout << "Deseja sair da Remoção [s/n] " << endl;
+			cout << "Deseja sair da Remoção ? [s/n] " << endl;
 			cin >> opcao;
 			if (opcao == 'n') {
 				system("clear");
@@ -466,7 +466,7 @@ void RemoveDados (TabelaH* tabelaCadastro) {
 	} else  {
 		cout << "Não exite deus com esse id não está na cadastrado " << endl;
 		char opcao;
-		cout << "Deseja sair da Remoção [s/n] " << endl;
+		cout << "Deseja sair da Remoção ? [s/n] " << endl;
 		cin >> opcao;
 		if (opcao == 'n') {
 			system("clear");
@@ -543,7 +543,20 @@ void ImprimeBlocoOrdem (TabelaH* tabelaCadastro) {
 	if (tabelaCadastro->PosicaoBytes(ConverteDecimal(numBin)) == -1) {
 		cout << "Posição Desocupada ! " << endl << endl;
 		char opcao;
-		cout << "Deseja sair da posição [s/n] " << endl;
+		cout << "Deseja sair da opção ? [s/n] " << endl;
+		cin >> opcao;
+		if (opcao == 'n') {
+			system("clear");
+			return ImprimeBlocoOrdem(tabelaCadastro);
+		} else if (opcao != 'n') {
+			system("clear");
+			Menu();
+			return;
+		}
+	} else if (numBin != FuncaoHash(ConverteDecimal(numBin))) {
+		cout << "Posição Não existente ! " << endl << endl;
+		char opcao;
+		cout << "Deseja sair da opção ? [s/n] " << endl;
 		cin >> opcao;
 		if (opcao == 'n') {
 			system("clear");
