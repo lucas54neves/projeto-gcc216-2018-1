@@ -553,7 +553,7 @@ void ImprimeBlocoOrdem (TabelaH* tabelaCadastro) {
 			Menu();
 			return;
 		}
-	} else if (numBin != FuncaoHash(ConverteDecimal(numBin))) {
+	} else if (numBin != FuncaoHash(ConverteDecimal(numBin)) || FuncaoHash(ConverteDecimal(numBin)) >= 16 ) {
 		cout << "Posição Não existente ! " << endl << endl;
 		char opcao;
 		cout << "Deseja sair da opção ? [s/n] " << endl;
