@@ -500,6 +500,19 @@ void ConsultaDados (TabelaH* tabelaCadastro) {
 		CarregaBloco(blocCons, tabelaCadastro->PosicaoBytes(numH));
 		blocCons->ImpressaoConsulta(id);
 		delete blocCons;
+	} else {
+		cerr << "ID não cadastrado ! " << endl;
+		char opcao;
+		cout << "Deseja sair da opção ? [s/n] " << endl;
+		cin >> opcao;
+		if (opcao == 'n') {
+			system("clear");
+			return ConsultaDados (tabelaCadastro);
+		} else if (opcao != 'n') {
+			system("clear");
+			Menu();
+			return;
+		}
 	}
 	
 }
@@ -553,7 +566,7 @@ void ImprimeBlocoOrdem (TabelaH* tabelaCadastro) {
 			Menu();
 			return;
 		}
-	} else if (numBin != FuncaoHash(ConverteDecimal(numBin)) || FuncaoHash(ConverteDecimal(numBin)) >= 16 ) {
+	} else if (numBin != FuncaoHash(ConverteDecimal(numBin)) and FuncaoHash(ConverteDecimal(numBin)) >= 16 ) {
 		cout << "Posição Não existente ! " << endl << endl;
 		char opcao;
 		cout << "Deseja sair da opção ? [s/n] " << endl;
